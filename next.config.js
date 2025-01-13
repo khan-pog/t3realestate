@@ -41,7 +41,7 @@ const config = withSentryConfig(
     // Suppresses source map uploading logs during build
     silent: true,
     org: "na-qqq",
-    project: "t3Realestate",
+    project: "t3realestate",
   },
   {
     // For all available options, see:
