@@ -21,7 +21,6 @@ async function Images() {
               alt={image.name}
             />
           </Link>
-          myUndefinedFunction();
           <div>{image.name}</div>
         </div>
       ))}
