@@ -10,11 +10,12 @@ const coreConfig = {
     remotePatterns: [{ hostname: "utfs.io" }],
   },
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   eslint: {
     ignoreDuringBuilds: true,
   },
+  productionBrowserSourceMaps: true,
 
   async rewrites() {
     return [
