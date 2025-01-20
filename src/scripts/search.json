@@ -1,0 +1,540 @@
+[
+  {
+    "id": "143350120",
+    "propertyType": "House",
+    "description": "Welcome to 427 McPhersons Lane, Heathcote! This stunning property offers a perfect blend of modern elegance and serene country living. Situated on a beautifully landscaped 6.23-hectare allotment, this spacious house boasts 3 bedrooms, 2 bathrooms, light filled living areas and a chef's kitchen.<br/>As you step inside, you'll be greeted by a warm and inviting atmosphere. The open-plan light filled living and dining area provides ample space for entertaining guests or simply relaxing with your loved ones. The modern kitchen is equipped with high-quality appliances, sleek cabinetry, and a breakfast bar, making it a chef's dream. <br/>The bedrooms are generously sized and feature built-in wardrobes, ensuring plenty of storage space. The master bedroom boasts an ensuite and reverse cycle split system, offering a private sanctuary. There is access to the return veranda from the master suite. Year round comfort is assured with multiple reverse cycle split systems and solid fuel heating. The home features a magnificent return verandah with automatic blinds creating the perfect space to relax and enjoy a glass or two of one of the many superb wines produced in the area while enjoying the views across the property. The home is connected to the grid and has a 5 kilowatt solar system and 6.5 kilowatt backup generator. A security systems ensures peace of mind.<br/>Outside, the property truly shines. A sauna and outdoor entertaining area combines with an omental water feature to create the ultimate relaxation experience. There is a self contained one bedroom bungalow ideal for extended family or income producing accommodation business. Across the path is a fully equipped airconditioned gym and 8.7m x 4.7m storage shed. Additional shedding includes a machinery shed and workshop with concrete floor and power , 9.5m x 7m and a 15m x 6m storage shed. The land offers endless possibilities, whether you dream of creating your own vegetable garden, setting up a playground for the kids, or even keeping horses. Water supply is assured with a bore, two dams and ample rainwater storage.<br/>Located just 1.5 hrs Melbourne and 40 minutes Bendigo this property offers the perfect balance between tranquility and convenience. Enjoy the peace and quiet of the countryside while still being within easy reach of local amenities, schools, and transport links.<br/> Don't miss out on the chance to make this property your own. Contact us today to arrange a viewing and start envisioning your future in this idyllic retreat.",
+    "propertyLink": "https://www.realestate.com.au/property-house-vic-heathcote-143350120",
+    "address": {
+      "display": {
+        "shortAddress": "427 McPhersons Lane",
+        "fullAddress": "427 McPhersons Lane, Heathcote, Vic 3523",
+        "__typename": "AddressDisplay"
+      },
+      "suburb": "Heathcote",
+      "state": "Vic",
+      "postcode": "3523",
+      "__typename": "Address"
+    },
+    "propertySizes": {
+      "building": null,
+      "land": {
+        "displayValue": "6.23",
+        "sizeUnit": {
+          "displayValue": "ha",
+          "__typename": "PropertySizeUnit"
+        },
+        "__typename": "PropertySize"
+      },
+      "preferred": {
+        "sizeType": "LAND",
+        "size": {
+          "displayValue": "6.23",
+          "sizeUnit": {
+            "displayValue": "ha",
+            "__typename": "PropertySizeUnit"
+          },
+          "__typename": "PropertySize"
+        },
+        "__typename": "PreferredPropertySize"
+      },
+      "__typename": "PropertySizes"
+    },
+    "generalFeatures": {
+      "bedrooms": {
+        "value": 4,
+        "__typename": "IntValue"
+      },
+      "bathrooms": {
+        "value": 3,
+        "__typename": "IntValue"
+      },
+      "parkingSpaces": {
+        "value": 3,
+        "__typename": "IntValue"
+      },
+      "studies": {
+        "value": 0,
+        "__typename": "IntValue"
+      },
+      "__typename": "GeneralFeatures"
+    },
+    "propertyFeatures": null,
+    "images": [
+      "https://i2.au.reastatic.net/{size}/d4ff888a029143a27bfabbacb0a4f47bba45389d93177d5c2a14c478dd2283ea/image.jpg",
+      "https://i2.au.reastatic.net/{size}/91c3217223d84027bfb4468456a2c160c97eb505e8780798684b3a4fc26ecc8e/image.jpg",
+      "https://i2.au.reastatic.net/{size}/968e840e6a9c0a24fd5a0a0e94eb9f6c0d44eef79cb1e3bc48e31989d0beba0a/image.jpg",
+      "https://i2.au.reastatic.net/{size}/faf9cbca741b1bc6a2008b173f3cc0d33ca034c52b98f454f961ab76a33aa52c/image.jpg",
+      "https://i2.au.reastatic.net/{size}/a10b2bc5d5c426ab494eb0b6060bc186903323900c31cfe6618cabae034029ec/image.jpg",
+      "https://i2.au.reastatic.net/{size}/bce03ad4ae1b79cb40745097d0d1cae17bdca5930a337ab20cc4e4c7102b138b/image.jpg",
+      "https://i2.au.reastatic.net/{size}/1f602c13585676ac2348d7c5967490161dc9fbba5b580f8dceea53175209d757/image.jpg",
+      "https://i2.au.reastatic.net/{size}/c12e490f51e6e446fa30e33fe8ff022c8b41dccd2d752767bd1a989211fd40a1/image.jpg",
+      "https://i2.au.reastatic.net/{size}/6e2655cf1709c6852fe67be7d8d1238edae955d7f6e1331179141964839c3d2d/image.jpg",
+      "https://i2.au.reastatic.net/{size}/d8024e1c1cf66446f201ef9650cf88efd4e4e0acae3ba059c7dc73786e381861/image.jpg",
+      "https://i2.au.reastatic.net/{size}/303ac72b97ac7c8f7f4b54537c6742e8c88f8cc8687f732ee0a825ddc58a4ee6/image.jpg",
+      "https://i2.au.reastatic.net/{size}/bc1ebc4b196d052f37d9513194ae865c1d6eeb79109e778e12eeb6b4676e3760/image.jpg",
+      "https://i2.au.reastatic.net/{size}/bce708f4dd7f6de3a1c0d32a9716dc30f7af7c6214d4ed737a6e999c102a01bf/image.jpg",
+      "https://i2.au.reastatic.net/{size}/686fc5d097217978f96a959a3da22ef56ce1eabcb480570b0bb8bac1140b97ad/image.jpg",
+      "https://i2.au.reastatic.net/{size}/25fdf1020259f8e8dd5149f4a9cfe9c9304e78e3a7c45ea019086595c0a273c2/image.jpg",
+      "https://i2.au.reastatic.net/{size}/3e3a2f7e92604c1451dd2b481a336abe5acc21e183b2d0d4845a3277186c4389/image.jpg",
+      "https://i2.au.reastatic.net/{size}/b0ed1a2c3ceb085775b98b2168f64e04e2245afed43db6cab06a46c14745900c/image.jpg",
+      "https://i2.au.reastatic.net/{size}/854e563fc3fa60590a1195b032e53ab139f0b2dc287639924cc16024ec4de4f8/image.jpg",
+      "https://i2.au.reastatic.net/{size}/92eb21ca8b6b6002677aa781cda4e866fe685028526504272797c7de485f7718/image.jpg",
+      "https://i2.au.reastatic.net/{size}/671266a51d2fdfff5ee0735e8b35cf3bca5643fc5375925403efaba1f8be9649/image.jpg",
+      "https://i2.au.reastatic.net/{size}/90552d8ac9ff2b8eb8b717e57a5ae22a6dc618613621876835d1d1c51683424b/image.jpg",
+      "https://i2.au.reastatic.net/{size}/3b0951c684d1fca425636172d68cc87d9615c938384c184eb8816a212b282dc0/image.jpg",
+      "https://i2.au.reastatic.net/{size}/8790f46c04f583f0594f617ccd21c789d78450f46f1277bdce46e40f2775233d/image.jpg",
+      "https://i2.au.reastatic.net/{size}/5c420f705a0cf83a45f1d27def188eb18a18cc4cb394fa5b0ebfdd00e6014b08/image.jpg",
+      "https://i2.au.reastatic.net/{size}/03b59733dbc102250d8286429ac2f2415030327df167a679e88136b870ef87e8/image.jpg",
+      "https://i2.au.reastatic.net/{size}/cb1e739e9568f323f600f38c7b8a07f7aef7b60f4d0988e487e1768e318514fd/image.jpg",
+      "https://i2.au.reastatic.net/{size}/838a84fd08854a2a6a926d9d3100e79c6033c7344f568f457e97137a7cb2b62b/image.jpg",
+      "https://i2.au.reastatic.net/{size}/73d4d290e843e097c19e3de14de2c93e43fc7d41e5ea4d430dfbcad8d824ee76/image.jpg",
+      "https://i2.au.reastatic.net/{size}/c64e3d43ef11da64e52756e0b1c69963aaada1ecd45f01b0738ff5a4ab2171ce/image.jpg",
+      "https://i2.au.reastatic.net/{size}/6db62e8821b8f05e7dbac0e6462a4a32938316687d780cf3b9a7996237f54fca/image.jpg",
+      "https://i2.au.reastatic.net/{size}/db9dc9756ddfc33a18c031339f39429d9afde3b166b3572e1473b06771c479a8/image.jpg",
+      "https://i2.au.reastatic.net/{size}/c8d2a7790f2f56ec9519c2dc1e8aa0d8bda3f8edc2b0d942195dab1a4f659886/image.jpg",
+      "https://i2.au.reastatic.net/{size}/2293e68584d886d1a5478a7607ad4fed6377785620daeec91e3e7ddd9f3d81fe/image.jpg",
+      "https://i2.au.reastatic.net/{size}/718bb57c6f9d03225daaf97b8431206ab005bc5cc2095ce95dfa14727d0fd30b/image.jpg",
+      "https://i2.au.reastatic.net/{size}/9b0b922054df53090b5f891ed3fadc4f00f42f54989d39bb20f113e04d8797dc/image.jpg"
+    ],
+    "videos": null,
+    "floorplans": null,
+    "listingCompany": {
+      "name": "Ray White - Heathcote",
+      "id": "XSLBEN",
+      "companyLink": "https://www.realestate.com.au/agency/ray-white-heathcote-XSLBEN?cid={cid}",
+      "phoneNumber": "03 5433 3990",
+      "address": "77 High Street, HEATHCOTE, VIC 3523",
+      "ratingsReviews": {
+        "avgRating": 4.8,
+        "totalReviews": 4,
+        "__typename": "AgencyRatingsReviews"
+      },
+      "description": null
+    },
+    "listers": [
+      {
+        "id": "37006",
+        "name": "Brian Lawry",
+        "photo": {
+          "templatedUrl": "https://i2.au.reastatic.net/{size}/0f29e83f2696d787f056b8a2e77a01c2ec0311e4ee19125dd1c070217bcfe9e1/main.jpg",
+          "__typename": "Image"
+        },
+        "phoneNumber": {
+          "display": "0407508656",
+          "showDisclaimer": false,
+          "__typename": "PhoneNumber"
+        },
+        "_links": {
+          "canonical": {
+            "href": "https://www.realestate.com.au/agent/brian-lawry-37006?cid={cid}",
+            "__typename": "AbsoluteLinks"
+          },
+          "__typename": "ListerLinks"
+        },
+        "__typename": "Lister",
+        "agentId": null,
+        "jobTitle": "Principal",
+        "showInMediaViewer": false
+      }
+    ],
+    "auction": null,
+    "valuationData": {
+      "source": "property.com.au",
+      "status": "not_found",
+      "confidence": null,
+      "estimatedValue": null,
+      "pricePerMeter": null,
+      "priceRange": null,
+      "lastUpdated": null,
+      "rental": {
+        "confidence": null,
+        "value": null,
+        "period": null,
+        "message": null
+      }
+    }
+  },
+  {
+    "id": "146690196",
+    "propertyType": "Apartment",
+    "description": "Discover the perfect blend of comfort and style in this beautiful two-level apartment, featuring 2 spacious bedrooms, 2 elegant bathrooms, and a dedicated study area – perfect for working from home. Situated in a vibrant neighbourhood, this apartment offers modern living at its finest, is perfect for professionals, families, or investors looking for a prime property in a sought-after area. Don’t miss out on this fantastic opportunity!<br/><br/> Notable features of this property include: <br/>- Sleek stone benchtops and premium Smeg gas appliances made for a stylish and functional cooking space.<br/>- Split - system air-conditioning throughout for year-round comfort  <br/>- Enjoy a generously sized master bedroom with built-in wardrobes and a private ensuite for ultimate relaxation.<br/>- Each bedroom is fitted with ample built-in storage, catering to both style and convenience.<br/>- A dedicated study area offers flexibility, perfect as a home office or potential third bedroom.<br/>- Intercom access, lift to secure parking, and on-site building management provide peace of mind and convenience.<br/>- Internal laundry with dryers <br/>- The secured car spaces with a storage cage <br/>- Located within walking distance of vibrant Danks Street, East Village, and Moore Park.<br/>Internal Area                             Approx. 93m2<br/>External Area                            Approx. 13m2<br/>Strata: $2,512.18 Per Quarter Approx. <br/>Council: $308.20 Per Quarter Approx. <br/>Water: $179.90 Per Quarter Approx. <br/>",
+    "propertyLink": "https://www.realestate.com.au/property-apartment-nsw-waterloo-146690196",
+    "address": {
+      "display": {
+        "shortAddress": "130/10 Lachlan Street",
+        "fullAddress": "130/10 Lachlan Street, Waterloo, NSW 2017",
+        "__typename": "AddressDisplay"
+      },
+      "suburb": "Waterloo",
+      "state": "NSW",
+      "postcode": "2017",
+      "__typename": "Address"
+    },
+    "propertySizes": {
+      "building": null,
+      "land": null,
+      "preferred": null,
+      "__typename": "PropertySizes"
+    },
+    "generalFeatures": {
+      "bedrooms": {
+        "value": 2,
+        "__typename": "IntValue"
+      },
+      "bathrooms": {
+        "value": 2,
+        "__typename": "IntValue"
+      },
+      "parkingSpaces": {
+        "value": 1,
+        "__typename": "IntValue"
+      },
+      "studies": {
+        "value": 1,
+        "__typename": "IntValue"
+      },
+      "__typename": "GeneralFeatures"
+    },
+    "propertyFeatures": null,
+    "images": [
+      "https://i2.au.reastatic.net/{size}/8ce419cd9c115e779fc18671c7acede900ef11c5596cc0e36bac33f81c519926/image.jpg",
+      "https://i2.au.reastatic.net/{size}/dd7320fa34b18a572a3f87c407d8412d083c880e68da08d65ac71e1f2fc8d045/image.jpg",
+      "https://i2.au.reastatic.net/{size}/b4e9ad7d600f32daaa9db8021e38319dedc45bcc82ca9a552e06721b75f004b2/image.jpg",
+      "https://i2.au.reastatic.net/{size}/552e3863d0d0ae91463b809a2fae2ed43c6d391e63889e560e8320b955b53b8e/image.jpg",
+      "https://i2.au.reastatic.net/{size}/f8230bb4955fe85e34374b048722bedc004b48fadcfe99ed0ca4b31ff0203eca/image.jpg",
+      "https://i2.au.reastatic.net/{size}/d8f9831b020217764315921624c72a08da6d8ff6fb25a932b55760c7d0a61082/image.jpg",
+      "https://i2.au.reastatic.net/{size}/9a714e6ccc4a98e86677ed15ad0f50ce2b61c57377627529647922d342896404/image.jpg",
+      "https://i2.au.reastatic.net/{size}/e67edb14c46b7821ac4044bc46785c7f60f7d5df6401c5bacc3f5fe00e3f4791/image.jpg",
+      "https://i2.au.reastatic.net/{size}/dc5ce023f1e456d378fab4cce77906571fe1a06f1133a54e0c219229d75d521e/image.jpg",
+      "https://i2.au.reastatic.net/{size}/e4ea653922a181249f83065b83c06169ff8d558111268c016e868f71479ddeec/image.jpg",
+      "https://i2.au.reastatic.net/{size}/8b2ebf9d2d478b1cf057dcfc4615bb0ca3b35edf0e0523a8d2956d405bf8dfb9/image.jpg",
+      "https://i2.au.reastatic.net/{size}/6f6c53d624b36a06b85b6543b51bbfdf7fb7b76853bfbdf968f761af5d1eff1a/image.jpg",
+      "https://i2.au.reastatic.net/{size}/4b541de424bc0dfa2f6e981ad8ccc6460c55a84f24c9f1018bf6d08e078d2d72/image.jpg",
+      "https://i2.au.reastatic.net/{size}/c728c837d95daeb2d3b50ba6f0d868b54e2247297b183c5883a0cffbf3532809/image.jpg",
+      "https://i2.au.reastatic.net/{size}/a30a88e554705e143d19abd3db2f0f9be9523c81818c2cc90bfe3ed36b5423d0/image.jpg"
+    ],
+    "videos": null,
+    "floorplans": null,
+    "listingCompany": {
+      "name": "Be 100 Property - BURWOOD",
+      "id": "ULVVSJ",
+      "companyLink": "https://www.realestate.com.au/agency/be-100-property-burwood-ULVVSJ?cid={cid}",
+      "phoneNumber": "0404665999",
+      "address": "1-17 Elsie St, BURWOOD, NSW 2134",
+      "ratingsReviews": {
+        "avgRating": 5,
+        "totalReviews": 2,
+        "__typename": "AgencyRatingsReviews"
+      },
+      "description": null
+    },
+    "listers": [
+      {
+        "id": "3128844",
+        "name": "Yun Li",
+        "photo": {
+          "templatedUrl": "https://i2.au.reastatic.net/{size}/d595b4480e748e34e0d1c8e5e3dd2c0588d0a08057b4cac560561fd99c035fb3/main.png",
+          "__typename": "Image"
+        },
+        "phoneNumber": {
+          "display": "0404576888",
+          "showDisclaimer": false,
+          "__typename": "PhoneNumber"
+        },
+        "_links": {
+          "canonical": {
+            "href": "https://www.realestate.com.au/agent/yun-li-3128844?cid={cid}",
+            "__typename": "AbsoluteLinks"
+          },
+          "__typename": "ListerLinks"
+        },
+        "__typename": "Lister",
+        "agentId": null,
+        "jobTitle": "Sales Representative",
+        "showInMediaViewer": false
+      }
+    ],
+    "auction": null,
+    "valuationData": {
+      "source": "property.com.au",
+      "status": "found",
+      "confidence": "High Confidence",
+      "estimatedValue": "$883,000",
+      "pricePerMeter": "December 2024",
+      "priceRange": "$840k$930k",
+      "lastUpdated": "Based on comparable sales, past sales and available property data",
+      "rental": {
+        "confidence": "High Confidence",
+        "value": "$1,130",
+        "period": "per week"
+      }
+    }
+  },
+  {
+    "id": "143085880",
+    "propertyType": "Apartment",
+    "description": "*INSPECTIONS NOW AVAILABLE AT ON-SITE DISPLAY SUITE!<br/><br/>Experience living in a different way and enjoy the best of living near the water and in reach of everything this flourishing city has to offer. From its impressive landmark facade, to its inspiring interiors and idyllic rooftop terrace, it is everything you would want and more.<br/>70 brand-new, modern apartments with an assortment of  2 & 3-Bedroom homes<br/>Modern kitchens built to be practical with high-end stainless steel appliances by SMEG, including a gas cooktop, oven, built-in dishwasher & microwave<br/>Generous-sized bedrooms fitted with built-in wardrobes and plush carpet, some also come with en-suite and balcony access<br/>Luxuriously-finished bathrooms, fully-tiled with Caroma tapware and fixtures<br/>Rooftop community garden with BBQ and seating facilities, with breathtaking views around Central Coast and the water<br/>Within short walking distance to the shops, train station and local schools<br/>Gosford City is in the midst of a revival, and is well on the way to exceeding its title as the capital of the Central Coast. Being positioned half way between Australia's largest cities, Sydney and Newcastle, makes it a breeze to commute for business or take a quick weekend getaway.",
+    "propertyLink": "https://www.realestate.com.au/property-apartment-nsw-gosford-143085880",
+    "address": {
+      "display": {
+        "shortAddress": "303/60-64 Hills Street",
+        "fullAddress": "303/60-64 Hills Street, Gosford, NSW 2250",
+        "__typename": "AddressDisplay"
+      },
+      "suburb": "Gosford",
+      "state": "NSW",
+      "postcode": "2250",
+      "__typename": "Address"
+    },
+    "propertySizes": {
+      "building": null,
+      "land": null,
+      "preferred": null,
+      "__typename": "PropertySizes"
+    },
+    "generalFeatures": {
+      "bedrooms": {
+        "value": 3,
+        "__typename": "IntValue"
+      },
+      "bathrooms": {
+        "value": 2,
+        "__typename": "IntValue"
+      },
+      "parkingSpaces": {
+        "value": 2,
+        "__typename": "IntValue"
+      },
+      "studies": {
+        "value": 1,
+        "__typename": "IntValue"
+      },
+      "__typename": "GeneralFeatures"
+    },
+    "propertyFeatures": null,
+    "images": [
+      "https://i2.au.reastatic.net/{size}/3dc82ae168242c2e72495eb1dcb709f710e8df138686912fa9fb527884d95e3f/image.jpg",
+      "https://i2.au.reastatic.net/{size}/d3088509568b962ede9c7caf18374a96e8b5e8bec42ba17ab2abd1ca1218d158/image.jpg",
+      "https://i2.au.reastatic.net/{size}/da4d84deabb588a67ed89a5bbace7cacfceed0d3675ea12b7d88374ba36fc234/image.jpg",
+      "https://i2.au.reastatic.net/{size}/48c082a5795addc4cbfa769724a2924561ca9be0f6d21bc79b760fc56a12a4c3/image.jpg",
+      "https://i2.au.reastatic.net/{size}/e9d708e9eec974634c90a442e6eb8f21015a145bb4d6081d409e5dad1728d971/image.jpg",
+      "https://i2.au.reastatic.net/{size}/265651bf0b2b898c4dbfd147c2d0a4cbfec61bb1411b3c40b17521174ee56a43/image.jpg",
+      "https://i2.au.reastatic.net/{size}/6d772b7a8987f6f62f4608a96da9d6154f6d2d1216ef91a407bcba377918efbe/image.jpg",
+      "https://i2.au.reastatic.net/{size}/810c88a29014422f619d1849cf059eb5dda737e8a91886fe7e20ab8ab6d1bff5/image.jpg",
+      "https://i2.au.reastatic.net/{size}/e366b57130a03e6feb405b31345b7b527be9350ee21a269ceaaded84f5cdc036/image.jpg",
+      "https://i2.au.reastatic.net/{size}/64e761d8d770d314786e9f72da12fc2ec2791ed9c6349cfaebf15b2ed2ade2f2/image.jpg",
+      "https://i2.au.reastatic.net/{size}/3393c6524554822ce385e8b10e129a94fef6752865648105ff5d9dc0cfd6c5a6/image.jpg",
+      "https://i2.au.reastatic.net/{size}/70bdf5709708e429a55fcd214f3e09b19ec1a290d3071379cbd3adf7869e079f/image.jpg",
+      "https://i2.au.reastatic.net/{size}/b9a19fc9a2c0afe45c475c80814ddc18f305ea6b031f61f2ccf4f28d7d1915a5/image.jpg",
+      "https://i2.au.reastatic.net/{size}/114f92d4d85b7c1f56b2bb5a15096c38f662f0ba393edd0436f81e5d4aacb445/image.jpg"
+    ],
+    "videos": null,
+    "floorplans": null,
+    "listingCompany": {
+      "name": "Dayten Property Pty Ltd",
+      "id": "CHAWGB",
+      "companyLink": "https://www.realestate.com.au/agency/dayten-property-pty-ltd-CHAWGB?cid={cid}",
+      "phoneNumber": "0433516668",
+      "address": "Shop 1C/6-10 Rothschild Ave, ROSEBERY, NSW 2018",
+      "ratingsReviews": {
+        "avgRating": 5,
+        "totalReviews": 21,
+        "__typename": "AgencyRatingsReviews"
+      },
+      "description": null
+    },
+    "listers": [
+      {
+        "id": "2395854",
+        "name": "Daniel Wu",
+        "photo": {
+          "templatedUrl": "https://i2.au.reastatic.net/{size}/edd22b175afdf84f22e7349a9a826de08db44cd7245445cfd2cd8175ae5e0e9e/main.jpg",
+          "__typename": "Image"
+        },
+        "phoneNumber": {
+          "display": "0433516668",
+          "showDisclaimer": false,
+          "__typename": "PhoneNumber"
+        },
+        "_links": {
+          "canonical": {
+            "href": "https://www.realestate.com.au/agent/daniel-wu-2395854?cid={cid}",
+            "__typename": "AbsoluteLinks"
+          },
+          "__typename": "ListerLinks"
+        },
+        "__typename": "Lister",
+        "agentId": null,
+        "jobTitle": "director",
+        "showInMediaViewer": false
+      },
+      {
+        "id": "2861374",
+        "name": "Andrew Kumar",
+        "photo": {
+          "templatedUrl": "https://i2.au.reastatic.net/{size}/1a340dfacc987faac3e37c289493146219d03101d1aba7b064af3fa2d8966dab/main.jpg",
+          "__typename": "Image"
+        },
+        "phoneNumber": {
+          "display": "0422255754",
+          "showDisclaimer": false,
+          "__typename": "PhoneNumber"
+        },
+        "_links": {
+          "canonical": {
+            "href": "https://www.realestate.com.au/agent/andrew-kumar-2861374?cid={cid}",
+            "__typename": "AbsoluteLinks"
+          },
+          "__typename": "ListerLinks"
+        },
+        "__typename": "Lister",
+        "agentId": null,
+        "jobTitle": "Sales Agent",
+        "showInMediaViewer": false
+      }
+    ],
+    "auction": null,
+    "valuationData": {
+      "source": "property.com.au",
+      "status": "not_found",
+      "confidence": null,
+      "estimatedValue": null,
+      "pricePerMeter": null,
+      "priceRange": null,
+      "lastUpdated": null,
+      "rental": {
+        "confidence": null,
+        "value": null,
+        "period": null,
+        "message": null
+      }
+    }
+  },
+  {
+    "id": "146801552",
+    "propertyType": "House",
+    "description": "Located in one of the most popular Special Rural subdivisions in Denmark, this property offers a heap of potential and boasts an extremely family friendly five bedroom home. Three of the bedrooms are generous in size and have their own ensuite, while there are living areas at either end of the home, which makes this a great home for families - particularly  with teenage kids looking for a bit of space. Further living/entertaining space is also available, as is a lockup double bay garage connected to the main roof.  The home is currently leased to tenants until the 8th June 2025, but makes the perfect lifestyle property with well established gardens and a host of mature trees screening the home from neighboring properties. The property is just under 6 acres in size - just right for a horse or a handful of sheep to keep the pasture maintained. Internal photos will be available on request at a later stage, but please contact Andrew Barrow on 0409081075 for further details.<br/><br/>",
+    "propertyLink": "https://www.realestate.com.au/property-house-wa-hay-146801552",
+    "address": {
+      "display": {
+        "shortAddress": "22 Sea Change Close",
+        "fullAddress": "22 Sea Change Close, Hay, WA 6333",
+        "__typename": "AddressDisplay"
+      },
+      "suburb": "Hay",
+      "state": "WA",
+      "postcode": "6333",
+      "__typename": "Address"
+    },
+    "propertySizes": {
+      "building": null,
+      "land": {
+        "displayValue": "2.41",
+        "sizeUnit": {
+          "displayValue": "ha",
+          "__typename": "PropertySizeUnit"
+        },
+        "__typename": "PropertySize"
+      },
+      "preferred": {
+        "sizeType": "LAND",
+        "size": {
+          "displayValue": "2.41",
+          "sizeUnit": {
+            "displayValue": "ha",
+            "__typename": "PropertySizeUnit"
+          },
+          "__typename": "PropertySize"
+        },
+        "__typename": "PreferredPropertySize"
+      },
+      "__typename": "PropertySizes"
+    },
+    "generalFeatures": {
+      "bedrooms": {
+        "value": 5,
+        "__typename": "IntValue"
+      },
+      "bathrooms": {
+        "value": 4,
+        "__typename": "IntValue"
+      },
+      "parkingSpaces": {
+        "value": 2,
+        "__typename": "IntValue"
+      },
+      "studies": {
+        "value": 0,
+        "__typename": "IntValue"
+      },
+      "__typename": "GeneralFeatures"
+    },
+    "propertyFeatures": null,
+    "images": [
+      "https://i2.au.reastatic.net/{size}/f079d79cde9ff554b96a8f5b7370cf678943b19cf5093acebb82c973eaf995d3/image.jpg",
+      "https://i2.au.reastatic.net/{size}/5f1cf678bcd878fec391d9409d35eb8ba6b60e3abaa04890eed03c5f0d98a07f/image.jpg",
+      "https://i2.au.reastatic.net/{size}/474ddf5ac2b2ecd760679207f09f43e9a520a77adc2104c061ffe04f588e0cc3/image.jpg",
+      "https://i2.au.reastatic.net/{size}/a5de3d72a9bac47e96c5ef532bacdf65ab1229c5b4305bfc6b53da73de86df2a/image.jpg",
+      "https://i2.au.reastatic.net/{size}/ad7d5797609d165104c8c7b8c9c0124f35865cf2536bd5a0a7f707be39d2a92c/image.jpg",
+      "https://i2.au.reastatic.net/{size}/06b7240fb1888700c40cd2b0ae7ba04f9de052ba958726da8d9eb8456e1101c6/image.jpg",
+      "https://i2.au.reastatic.net/{size}/98afa365d356a85eaa0c781c07763f9df24678d3f5537dc450027334b8062c37/image.jpg",
+      "https://i2.au.reastatic.net/{size}/f9e9a511e835ac73087f59caecf0fdc085a1be056e10c3bae0c42cf805010e4c/image.jpg"
+    ],
+    "videos": null,
+    "floorplans": null,
+    "listingCompany": {
+      "name": "Ray White - Denmark",
+      "id": "XRWDEA",
+      "companyLink": "https://www.realestate.com.au/agency/ray-white-denmark-XRWDEA?cid={cid}",
+      "phoneNumber": "(08) 9848 1498",
+      "address": "4 / 59 Strickland Street, DENMARK, WA 6333",
+      "ratingsReviews": {
+        "avgRating": 5,
+        "totalReviews": 30,
+        "__typename": "AgencyRatingsReviews"
+      },
+      "description": null
+    },
+    "listers": [
+      {
+        "id": "66797",
+        "name": "Andrew Barrow",
+        "photo": {
+          "templatedUrl": "https://i2.au.reastatic.net/{size}/f97ab069082a6fbf45792bd1e5163952450034f802dbe9c7b7857d90061508e5/main.jpg",
+          "__typename": "Image"
+        },
+        "phoneNumber": {
+          "display": "0409081075",
+          "showDisclaimer": false,
+          "__typename": "PhoneNumber"
+        },
+        "_links": {
+          "canonical": {
+            "href": "https://www.realestate.com.au/agent/andrew-barrow-66797?cid={cid}",
+            "__typename": "AbsoluteLinks"
+          },
+          "__typename": "ListerLinks"
+        },
+        "__typename": "Lister",
+        "agentId": null,
+        "jobTitle": "Director and Sales Consultant",
+        "showInMediaViewer": false
+      }
+    ],
+    "auction": null,
+    "valuationData": {
+      "source": "property.com.au",
+      "status": "found",
+      "confidence": "High Confidence",
+      "estimatedValue": "$937,000",
+      "pricePerMeter": "$388,910 per ha",
+      "priceRange": "$890k$980k",
+      "lastUpdated": "Based on comparable sales, past sales and available property data",
+      "rental": {
+        "confidence": "Medium Confidence",
+        "value": "$730",
+        "period": "per week"
+      }
+    }
+  }
+]
