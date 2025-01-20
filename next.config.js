@@ -7,6 +7,7 @@ await import("./src/env.js");
 /** @type {import("next").NextConfig} */
 const coreConfig = {
   images: {
+    unoptimized: true,
     remotePatterns: [{ hostname: "utfs.io" }],
   },
   typescript: {
