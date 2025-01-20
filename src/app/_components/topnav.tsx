@@ -6,14 +6,14 @@ import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 
 export function TopNav() {
-  const { user } = useUser();
-  const isAdmin = user?.privateMetadata?.isAdmin === true;
+  const { user, isLoaded } = useUser();
+  const isAdmin = user?.publicMetadata?.isAdmin === true;
 
   return (
     <nav className="flex w-full items-center justify-between border-b p-4 text-xl font-semibold">
       <div className="flex items-center gap-4">
         <Link href="/">Gallery</Link>
-        {isAdmin && (
+        {isLoaded && isAdmin && (
           <Link 
             href="/admin" 
             className="text-sm text-muted-foreground hover:text-foreground"

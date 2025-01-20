@@ -7,9 +7,12 @@ export async function setUserAsAdmin(userId: string, isAdmin: boolean) {
   // Ensure the current user is an admin
   await requireAdmin();
   
-  // Update the user's metadata
+  // Update both private and public metadata
   await clerkClient.users.updateUser(userId, {
     privateMetadata: {
+      isAdmin
+    },
+    publicMetadata: {
       isAdmin
     }
   });
