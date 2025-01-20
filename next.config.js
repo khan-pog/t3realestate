@@ -8,6 +8,7 @@ await import("./src/env.js");
 const coreConfig = {
   images: {
     unoptimized: true,
+    disableStaticImages: true,
     remotePatterns: [{ hostname: "utfs.io" }],
   },
   typescript: {
