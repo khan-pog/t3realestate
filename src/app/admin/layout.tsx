@@ -1,6 +1,14 @@
 import { AdminNavLink } from "~/components/admin/admin-nav-link";
+import { requireAdmin } from "~/lib/auth";
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ 
+  children 
+}: { 
+  children: React.ReactNode 
+}) {
+  // This will redirect non-admins automatically
+  await requireAdmin();
+
   return (
     <div className="grid h-screen grid-cols-[250px,1fr]">
       <aside className="border-r bg-gray-50">

@@ -1,7 +1,8 @@
 // middleware.ts
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-const isProtectedRoute = createRouteMatcher(["/dashboard(.*)"]);
+// Add admin route pattern
+const isProtectedRoute = createRouteMatcher(["/dashboard(.*)", "/admin(.*)"]);
 
 export default clerkMiddleware((auth, request) => {
   if (isProtectedRoute(request)) auth().protect();
