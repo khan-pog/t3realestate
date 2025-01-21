@@ -29,9 +29,9 @@ export async function POST() {
       // Insert features with land size if available
       await db.insert(propertyFeatures).values({
         propertyId: property.id,
-        bedrooms: property.generalFeatures.bedrooms.value,
-        bathrooms: property.generalFeatures.bathrooms.value,
-        parkingSpaces: property.generalFeatures.parkingSpaces.value,
+        bedrooms: property.generalFeatures?.bedrooms?.value ?? null,
+        bathrooms: property.generalFeatures?.bathrooms?.value ?? null,
+        parkingSpaces: property.generalFeatures?.parkingSpaces?.value ?? null,
         landSize: property.propertySizes?.land?.displayValue ? parseFloat(property.propertySizes.land.displayValue) : null,
         landUnit: property.propertySizes?.land?.sizeUnit?.displayValue || null,
         buildingSize: property.propertySizes?.building?.displayValue ? parseFloat(property.propertySizes.building.displayValue) : null,
