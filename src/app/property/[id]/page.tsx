@@ -7,5 +7,6 @@ interface PageProps {
 }
 
 export default function PropertyPage({ params }: PageProps) {
+  console.log('Property page params:', params);
   return <FullPagePropertyView id={params.id} />;
 } 

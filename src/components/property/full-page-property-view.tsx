@@ -5,6 +5,8 @@ import { eq } from "drizzle-orm";
 import { Carousel } from "~/components/ui/carousel";
 
 async function getPropertyDetails(id: string) {
+  console.log('Fetching property details for ID:', id);
+  
   const results = await db
     .select({
       property: {
@@ -42,6 +44,14 @@ async function getPropertyDetails(id: string) {
     .where(eq(properties.id, id))
     .limit(1);
 
+  console.log('Property query results:', results);
+
+  if (results.length === 0) {
+    console.error('No property found with ID:', id);
+    throw new Error("Property not found");
+  }
+
+  // Get all images for the property
   const images = await db
     .select({
       url: propertyImages.url,
@@ -50,11 +60,19 @@ async function getPropertyDetails(id: string) {
     .where(eq(propertyImages.propertyId, id))
     .orderBy(propertyImages.order);
 
-  if (results.length === 0) {
-    throw new Error("Property not found");
-  }
+  console.log('Property images:', images);
 
-  return { ...results[0], images };
+  // Add null checks for nested objects
+  const propertyDetails = {
+    ...results[0],
+    images,
+    address: results[0].address || {},
+    features: results[0].features || {},
+    valuation: results[0].valuation || null
+  };
+
+  console.log('Final property details:', propertyDetails);
+  return propertyDetails;
 }
 
 export default async function FullPagePropertyView({ id }: { id: string }) {
