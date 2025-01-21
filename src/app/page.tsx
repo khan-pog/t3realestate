@@ -21,23 +21,23 @@ function PropertyCard({ property, address, features, primaryImage, valuation }: 
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-gray-200">
-            <span className="text-gray-400">No image available</span>
+            <span className="text-gray-600">No image available</span>
           </div>
         )}
       </div>
       <div className="p-4">
         <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">
           {address?.shortAddress}
-          <span className="text-sm text-gray-500 dark:text-gray-400">
+          <span className="text-sm text-gray-700 dark:text-gray-200">
             , {address?.suburb} {address?.state}
           </span>
         </h3>
-        <div className="mb-2 flex gap-4 text-sm text-gray-600 dark:text-gray-300">
+        <div className="mb-2 flex gap-4 text-sm text-gray-700 dark:text-gray-200">
           {features?.bedrooms && <span>{features.bedrooms} beds</span>}
           {features?.bathrooms && <span>{features.bathrooms} baths</span>}
           {features?.parkingSpaces && <span>{features.parkingSpaces} parking</span>}
         </div>
-        <div className="text-sm text-gray-500 dark:text-gray-400">
+        <div className="text-sm text-gray-700 dark:text-gray-200">
           <div>{property.propertyType}</div>
           {valuation?.estimatedValue && (
             <div className="mt-1 font-semibold text-gray-900 dark:text-white">
