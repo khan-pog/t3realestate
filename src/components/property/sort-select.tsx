@@ -7,6 +7,7 @@ const sortOptions = [
   { value: 'price-high', label: 'Price: High to Low' },
   { value: 'price-low', label: 'Price: Low to High' },
   { value: 'beds', label: 'Bedrooms' },
+  { value: 'one-percent', label: '1% Rule (High to Low)' },
 ];
 
 export default function SortSelect() {

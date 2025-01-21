@@ -54,7 +54,7 @@ export async function deleteImage(id: number) {
   redirect("/");
 }
 
-type SortOption = 'newest' | 'price-high' | 'price-low' | 'beds';
+type SortOption = 'newest' | 'price-high' | 'price-low' | 'beds' | 'one-percent';
 
 export async function getProperties(sortBy: SortOption = 'newest') {
   try {
@@ -100,7 +100,6 @@ export async function getProperties(sortBy: SortOption = 'newest') {
     // Apply sorting based on parameter
     switch (sortBy) {
       case 'price-high':
-        // Convert string price to number for sorting
         query.orderBy((fields) => 
           sql`CAST(REPLACE(REPLACE(${propertyValuations.estimatedValue}, '$', ''), ',', '') AS DECIMAL) DESC NULLS LAST`
         );
@@ -111,8 +110,19 @@ export async function getProperties(sortBy: SortOption = 'newest') {
         );
         break;
       case 'beds':
-        // Sort by bedrooms DESC, putting nulls last
         query.orderBy((fields) => sql`${propertyFeatures.bedrooms} DESC NULLS LAST`);
+        break;
+      case 'one-percent':
+        // Calculate 1% rule in SQL and sort by it
+        query.orderBy((fields) => sql`
+          CASE 
+            WHEN ${propertyValuations.estimatedValue} IS NULL OR ${propertyValuations.rentalValue} IS NULL THEN NULL
+            ELSE (
+              CAST(REPLACE(REPLACE(${propertyValuations.rentalValue}, '$', ''), ',', '') AS DECIMAL) * 52 / 12 /
+              CAST(REPLACE(REPLACE(${propertyValuations.estimatedValue}, '$', ''), ',', '') AS DECIMAL) * 100
+            )
+          END DESC NULLS LAST
+        `);
         break;
       case 'newest':
       default:
