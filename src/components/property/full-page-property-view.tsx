@@ -168,28 +168,48 @@ export default async function FullPagePropertyView({ id }: { id: string }) {
                 <div className="mb-4">
                   <span className="text-sm text-gray-600 dark:text-gray-300">Weekly Rental</span>
                   <p className="font-medium text-gray-900 dark:text-white">
-                    ${Number(valuation.rentalValue).toLocaleString()}
+                    ${valuation.rentalValue}
                   </p>
-                  {calculateOnePercentRule(
-                    Number(valuation.estimatedValue),
-                    Number(valuation.rentalValue)
-                  ) && (
-                    <div className="mt-2">
-                      <span className="text-sm text-gray-600 dark:text-gray-300">1% Rule Analysis</span>
-                      <p className={`font-medium ${
-                        calculateOnePercentRule(Number(valuation.estimatedValue), Number(valuation.rentalValue))! >= 1 
-                          ? 'text-green-600 dark:text-green-400' 
-                          : 'text-red-600 dark:text-red-400'
-                      }`}>
-                        {calculateOnePercentRule(Number(valuation.estimatedValue), Number(valuation.rentalValue))}%
-                        <span className="ml-2 text-sm text-gray-600 dark:text-gray-300">
-                          ({calculateOnePercentRule(Number(valuation.estimatedValue), Number(valuation.rentalValue))! >= 1 
-                            ? 'Meets 1% rule' 
-                            : 'Below 1% rule'})
-                        </span>
-                      </p>
-                    </div>
-                  )}
+                  {(() => {
+                    console.log('FullPageView Valuation Data:', {
+                      estimatedValue: valuation.estimatedValue,
+                      rentalValue: valuation.rentalValue
+                    });
+
+                    const cleanedEstimatedValue = valuation.estimatedValue ? Number(valuation.estimatedValue.replace(/[$,]/g, '')) : null;
+                    const cleanedRentalValue = valuation.rentalValue ? Number(valuation.rentalValue.replace(/[$,]/g, '')) : null;
+                    
+                    console.log('FullPageView Cleaned Values:', {
+                      cleanedEstimatedValue,
+                      cleanedRentalValue
+                    });
+
+                    const onePercentRule = calculateOnePercentRule(
+                      cleanedEstimatedValue,
+                      cleanedRentalValue
+                    );
+                    
+                    console.log('FullPageView 1% Rule Result:', {
+                      onePercentRule,
+                      meetsRule: onePercentRule ? onePercentRule >= 1 : false
+                    });
+                    
+                    return onePercentRule && (
+                      <div className="mt-2">
+                        <span className="text-sm text-gray-600 dark:text-gray-300">1% Rule Analysis</span>
+                        <p className={`font-medium ${
+                          onePercentRule >= 1 
+                            ? 'text-green-600 dark:text-green-400' 
+                            : 'text-red-600 dark:text-red-400'
+                        }`}>
+                          {onePercentRule}%
+                          <span className="ml-2 text-sm text-gray-600 dark:text-gray-300">
+                            ({onePercentRule >= 1 ? 'Meets 1% rule' : 'Below 1% rule'})
+                          </span>
+                        </p>
+                      </div>
+                    );
+                  })()}
                 </div>
               )}
               {valuation.priceRange && (
