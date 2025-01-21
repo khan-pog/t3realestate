@@ -74,7 +74,7 @@ export async function POST() {
           });
       }
 
-      // Insert valuation data if available
+      // Insert or update valuation data
       if (property.valuationData) {
         await db.insert(propertyValuations).values({
           propertyId: property.id,
@@ -86,6 +86,18 @@ export async function POST() {
           rentalValue: property.valuationData.rental?.value || null,
           rentalPeriod: property.valuationData.rental?.period || null,
           rentalConfidence: property.valuationData.rental?.confidence || null,
+        }).onConflictDoUpdate({
+          target: propertyValuations.propertyId,
+          set: {
+            source: property.valuationData.source,
+            confidence: property.valuationData.confidence || null,
+            estimatedValue: property.valuationData.estimatedValue || null,
+            priceRange: property.valuationData.priceRange || null,
+            lastUpdated: new Date(),
+            rentalValue: property.valuationData.rental?.value || null,
+            rentalPeriod: property.valuationData.rental?.period || null,
+            rentalConfidence: property.valuationData.rental?.confidence || null,
+          }
         });
       }
     }
