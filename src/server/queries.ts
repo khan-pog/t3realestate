@@ -5,6 +5,8 @@ import { images } from "./db/schema";
 import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import analyticsServerClient from "./analytics";
+import { properties, propertyImages, propertyFeatures, addresses, propertyValuations } from "./db/schema";
+import { desc } from "drizzle-orm";
 
 export async function getMyImages() {
   const user = auth();
@@ -50,4 +52,46 @@ export async function deleteImage(id: number) {
   });
 
   redirect("/");
+}
+
+export async function getProperties() {
+  const results = await db
+    .select({
+      property: {
+        id: properties.id,
+        propertyType: properties.propertyType,
+        description: properties.description,
+      },
+      address: {
+        shortAddress: addresses.shortAddress,
+        suburb: addresses.suburb,
+        state: addresses.state,
+      },
+      features: {
+        bedrooms: propertyFeatures.bedrooms,
+        bathrooms: propertyFeatures.bathrooms,
+        parkingSpaces: propertyFeatures.parkingSpaces,
+      },
+      primaryImage: {
+        url: propertyImages.url,
+      },
+      valuation: {
+        estimatedValue: propertyValuations.estimatedValue,
+        lastUpdated: propertyValuations.lastUpdated,
+      },
+    })
+    .from(properties)
+    .leftJoin(addresses, eq(addresses.propertyId, properties.id))
+    .leftJoin(propertyFeatures, eq(propertyFeatures.propertyId, properties.id))
+    .leftJoin(
+      propertyImages, 
+      and(
+        eq(propertyImages.propertyId, properties.id),
+        eq(propertyImages.order, 1)
+      )
+    )
+    .leftJoin(propertyValuations, eq(propertyValuations.propertyId, properties.id))
+    .orderBy(desc(properties.createdAt));
+
+  return results;
 }
