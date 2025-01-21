@@ -148,6 +148,40 @@ export async function importData() {
             });
         }
 
+        // Handle valuation data
+        if (property.valuationData) {
+          try {
+            await db.insert(propertyValuations).values({
+              propertyId: property.id,
+              source: property.valuationData.source,
+              confidence: property.valuationData.confidence || null,
+              estimatedValue: property.valuationData.estimatedValue || null,
+              priceRange: property.valuationData.priceRange || null,
+              lastUpdated: new Date(),
+              rentalValue: property.valuationData.rental?.value || null,
+              rentalPeriod: property.valuationData.rental?.period || null,
+              rentalConfidence: property.valuationData.rental?.confidence || null,
+            }).onConflictDoUpdate({
+              target: propertyValuations.propertyId,
+              set: {
+                source: property.valuationData.source,
+                confidence: property.valuationData.confidence || null,
+                estimatedValue: property.valuationData.estimatedValue || null,
+                priceRange: property.valuationData.priceRange || null,
+                lastUpdated: new Date(),
+                rentalValue: property.valuationData.rental?.value || null,
+                rentalPeriod: property.valuationData.rental?.period || null,
+                rentalConfidence: property.valuationData.rental?.confidence || null,
+              }
+            });
+            console.log(`Valuation data processed for property ${property.id}`);
+          } catch (valuationError) {
+            console.error(`Error processing valuation data for property ${property.id}:`, valuationError);
+          }
+        } else {
+          console.warn(`No valuation data found for property ${property.id}`);
+        }
+
       } catch (propertyError) {
         console.error(`Error processing property ${property.id}:`, propertyError);
         // Continue with next property
