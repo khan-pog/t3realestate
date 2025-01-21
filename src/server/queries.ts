@@ -6,7 +6,7 @@ import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import analyticsServerClient from "./analytics";
 import { properties, propertyImages, propertyFeatures, addresses, propertyValuations } from "./db/schema";
-import { desc } from "drizzle-orm";
+import { desc, asc } from "drizzle-orm";
 
 export async function getMyImages() {
   const user = auth();
@@ -54,10 +54,12 @@ export async function deleteImage(id: number) {
   redirect("/");
 }
 
-export async function getProperties() {
+type SortOption = 'newest' | 'price-high' | 'price-low' | 'beds';
+
+export async function getProperties(sortBy: SortOption = 'newest') {
   try {
-    console.log('Fetching properties...');
-    const results = await db
+    console.log('Fetching properties with sort:', sortBy);
+    const query = db
       .select({
         property: {
           id: properties.id,
@@ -93,8 +95,24 @@ export async function getProperties() {
         )
       )
       .leftJoin(propertyValuations, eq(propertyValuations.propertyId, properties.id))
-      .orderBy(desc(properties.createdAt));
 
+    // Apply sorting based on parameter
+    switch (sortBy) {
+      case 'price-high':
+        query.orderBy(desc(propertyValuations.estimatedValue));
+        break;
+      case 'price-low':
+        query.orderBy(asc(propertyValuations.estimatedValue));
+        break;
+      case 'beds':
+        query.orderBy(desc(propertyFeatures.bedrooms));
+        break;
+      case 'newest':
+      default:
+        query.orderBy(desc(properties.createdAt));
+    }
+
+    const results = await query;
     console.log('Properties found:', results.length);
     return results;
   } catch (error) {

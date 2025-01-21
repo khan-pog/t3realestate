@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getProperties } from "~/server/queries";
 import Image from "next/image";
 import { calculateOnePercentRule } from "~/lib/utils";
+import SortSelect from '~/components/property/sort-select';
 
 export const dynamic = "force-dynamic";
 
@@ -68,19 +69,28 @@ function PropertyCard({ property, address, features, primaryImage, valuation }: 
   );
 }
 
-async function Properties() {
-  const properties = await getProperties();
+async function Properties({ searchParams }: { searchParams: { sort?: string } }) {
+  const properties = await getProperties(searchParams.sort as any || 'newest');
 
   return (
-    <div className="flex flex-wrap justify-center gap-6 p-4">
-      {properties.map((property) => (
-        <PropertyCard key={property.property.id} {...property} />
-      ))}
+    <div className="flex flex-col gap-6">
+      <div className="flex justify-end px-4">
+        <SortSelect />
+      </div>
+      <div className="flex flex-wrap justify-center gap-6 p-4">
+        {properties.map((property) => (
+          <PropertyCard key={property.property.id} {...property} />
+        ))}
+      </div>
     </div>
   );
 }
 
-export default async function HomePage() {
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: { sort?: string };
+}) {
   return (
     <main className="container mx-auto py-8">
       <h1 className="mb-8 text-3xl font-bold">Featured Properties</h1>
@@ -90,7 +100,7 @@ export default async function HomePage() {
         </div>
       </SignedOut>
       <SignedIn>
-        <Properties />
+        <Properties searchParams={searchParams} />
       </SignedIn>
     </main>
   );
