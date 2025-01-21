@@ -7,7 +7,7 @@
     "address": {
       "display": {
         "shortAddress": "427 McPhersons Lane",
-        "fullAddress": "427 McPhersons Lane, Heathcote, Vic 3523",
+        "fullAddress": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa427 McPhersons Lane, Heathcote, Vic 3523",
         "__typename": "AddressDisplay"
       },
       "suburb": "Heathcote",
