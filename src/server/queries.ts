@@ -111,7 +111,8 @@ export async function getProperties(sortBy: SortOption = 'newest') {
         );
         break;
       case 'beds':
-        query.orderBy(desc(propertyFeatures.bedrooms));
+        // Sort by bedrooms DESC, putting nulls last
+        query.orderBy((fields) => sql`${propertyFeatures.bedrooms} DESC NULLS LAST`);
         break;
       case 'newest':
       default:
