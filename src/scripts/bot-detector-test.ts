@@ -24,6 +24,8 @@ async function runBotDetectionTest() {
     // Wait for a moment to ensure all elements are loaded
     await new Promise(resolve => setTimeout(resolve, 5000));
 
+
+    
     // Debug: Print the page content to verify the structure
     const pageContent = await page.content();
     console.log('Page Content:', pageContent);
