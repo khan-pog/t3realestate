@@ -2,7 +2,7 @@ import "server-only";
 import { db } from "./db";
 import { auth } from "@clerk/nextjs/server";
 import { images } from "./db/schema";
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import analyticsServerClient from "./analytics";
 import { properties, propertyImages, propertyFeatures, addresses, propertyValuations } from "./db/schema";
@@ -81,6 +81,7 @@ export async function getProperties(sortBy: SortOption = 'newest') {
         },
         valuation: {
           estimatedValue: propertyValuations.estimatedValue,
+          rentalValue: propertyValuations.rentalValue,
           lastUpdated: propertyValuations.lastUpdated,
         },
       })
@@ -88,21 +89,26 @@ export async function getProperties(sortBy: SortOption = 'newest') {
       .leftJoin(addresses, eq(addresses.propertyId, properties.id))
       .leftJoin(propertyFeatures, eq(propertyFeatures.propertyId, properties.id))
       .leftJoin(
-        propertyImages, 
+        propertyImages,
         and(
           eq(propertyImages.propertyId, properties.id),
           eq(propertyImages.order, 1)
         )
       )
-      .leftJoin(propertyValuations, eq(propertyValuations.propertyId, properties.id))
+      .leftJoin(propertyValuations, eq(propertyValuations.propertyId, properties.id));
 
     // Apply sorting based on parameter
     switch (sortBy) {
       case 'price-high':
-        query.orderBy(desc(propertyValuations.estimatedValue));
+        // Convert string price to number for sorting
+        query.orderBy((fields) => 
+          sql`CAST(REPLACE(REPLACE(${propertyValuations.estimatedValue}, '$', ''), ',', '') AS DECIMAL) DESC NULLS LAST`
+        );
         break;
       case 'price-low':
-        query.orderBy(asc(propertyValuations.estimatedValue));
+        query.orderBy((fields) => 
+          sql`CAST(REPLACE(REPLACE(${propertyValuations.estimatedValue}, '$', ''), ',', '') AS DECIMAL) ASC NULLS LAST`
+        );
         break;
       case 'beds':
         query.orderBy(desc(propertyFeatures.bedrooms));
