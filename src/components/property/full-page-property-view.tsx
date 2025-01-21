@@ -82,7 +82,7 @@ export default async function FullPagePropertyView({ id }: { id: string }) {
     <div className="container mx-auto max-w-6xl px-4 py-8">
       <div className="mb-6">
         <h1 className="mb-2 text-3xl font-bold">{address.shortAddress}</h1>
-        <p className="text-lg text-gray-600">
+        <p className="text-lg text-gray-700">
           {address.suburb}, {address.state} {address.postcode}
         </p>
       </div>
@@ -107,39 +107,39 @@ export default async function FullPagePropertyView({ id }: { id: string }) {
           <h2 className="mb-4 text-2xl font-semibold">Property Details</h2>
           <div className="mb-6 grid grid-cols-2 gap-4 rounded-lg bg-gray-50 p-4">
             <div>
-              <span className="text-sm text-gray-500">Property Type</span>
-              <p className="font-medium">{property.propertyType}</p>
+              <span className="text-sm text-gray-600">Property Type</span>
+              <p className="font-medium text-gray-900">{property.propertyType}</p>
             </div>
             {features.bedrooms && (
               <div>
-                <span className="text-sm text-gray-500">Bedrooms</span>
-                <p className="font-medium">{features.bedrooms}</p>
+                <span className="text-sm text-gray-600">Bedrooms</span>
+                <p className="font-medium text-gray-900">{features.bedrooms}</p>
               </div>
             )}
             {features.bathrooms && (
               <div>
-                <span className="text-sm text-gray-500">Bathrooms</span>
-                <p className="font-medium">{features.bathrooms}</p>
+                <span className="text-sm text-gray-600">Bathrooms</span>
+                <p className="font-medium text-gray-900">{features.bathrooms}</p>
               </div>
             )}
             {features.parkingSpaces && (
               <div>
-                <span className="text-sm text-gray-500">Parking</span>
-                <p className="font-medium">{features.parkingSpaces}</p>
+                <span className="text-sm text-gray-600">Parking</span>
+                <p className="font-medium text-gray-900">{features.parkingSpaces}</p>
               </div>
             )}
             {features.landSize && (
               <div>
-                <span className="text-sm text-gray-500">Land Size</span>
-                <p className="font-medium">
+                <span className="text-sm text-gray-600">Land Size</span>
+                <p className="font-medium text-gray-900">
                   {features.landSize} {features.landUnit}
                 </p>
               </div>
             )}
             {features.buildingSize && (
               <div>
-                <span className="text-sm text-gray-500">Building Size</span>
-                <p className="font-medium">
+                <span className="text-sm text-gray-600">Building Size</span>
+                <p className="font-medium text-gray-900">
                   {features.buildingSize} {features.buildingUnit}
                 </p>
               </div>
@@ -149,7 +149,7 @@ export default async function FullPagePropertyView({ id }: { id: string }) {
           {property.description && (
             <div className="mb-6">
               <h3 className="mb-2 text-xl font-semibold">Description</h3>
-              <p className="whitespace-pre-wrap text-gray-600">{property.description}</p>
+              <p className="whitespace-pre-wrap text-gray-700">{property.description}</p>
             </div>
           )}
         </div>
@@ -159,29 +159,29 @@ export default async function FullPagePropertyView({ id }: { id: string }) {
           {valuation ? (
             <div className="rounded-lg bg-gray-50 p-4">
               <div className="mb-4">
-                <span className="text-sm text-gray-500">Estimated Value</span>
-                <p className="text-2xl font-bold">${valuation.estimatedValue}</p>
+                <span className="text-sm text-gray-600">Estimated Value</span>
+                <p className="text-2xl font-bold text-gray-900">${valuation.estimatedValue}</p>
               </div>
               {valuation.priceRange && (
                 <div className="mb-4">
-                  <span className="text-sm text-gray-500">Price Range</span>
-                  <p className="font-medium">{valuation.priceRange}</p>
+                  <span className="text-sm text-gray-600">Price Range</span>
+                  <p className="font-medium text-gray-900">{valuation.priceRange}</p>
                 </div>
               )}
               {valuation.confidence && (
                 <div className="mb-4">
-                  <span className="text-sm text-gray-500">Confidence</span>
-                  <p className="font-medium">{valuation.confidence}</p>
+                  <span className="text-sm text-gray-600">Confidence</span>
+                  <p className="font-medium text-gray-900">{valuation.confidence}</p>
                 </div>
               )}
               {valuation.lastUpdated && (
-                <div className="text-sm text-gray-500">
+                <div className="text-sm text-gray-600">
                   Last updated: {valuation.lastUpdated.toLocaleDateString()}
                 </div>
               )}
             </div>
           ) : (
-            <p className="text-gray-500">No valuation data available</p>
+            <p className="text-gray-700">No valuation data available</p>
           )}
         </div>
       </div>

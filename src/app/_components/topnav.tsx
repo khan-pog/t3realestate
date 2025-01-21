@@ -10,13 +10,15 @@ export function TopNav() {
   const isAdmin = user?.publicMetadata?.isAdmin === true;
 
   return (
-    <nav className="flex w-full items-center justify-between border-b p-4 text-xl font-semibold">
+    <nav className="flex w-full items-center justify-between border-b bg-white p-4 text-xl font-semibold dark:bg-gray-900">
       <div className="flex items-center gap-4">
-        <Link href="/">Gallery</Link>
+        <Link href="/" className="text-gray-900 hover:text-gray-700 dark:text-white dark:hover:text-gray-200">
+          Gallery
+        </Link>
         {isLoaded && isAdmin && (
           <Link 
             href="/admin" 
-            className="text-sm text-muted-foreground hover:text-foreground"
+            className="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
           >
             Admin
           </Link>

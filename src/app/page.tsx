@@ -26,25 +26,21 @@ function PropertyCard({ property, address, features, primaryImage, valuation }: 
         )}
       </div>
       <div className="p-4">
-        <h3 className="mb-2 text-lg font-semibold">
+        <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">
           {address?.shortAddress}
-          <span className="text-sm text-gray-500">, {address?.suburb} {address?.state}</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            , {address?.suburb} {address?.state}
+          </span>
         </h3>
-        <div className="mb-2 flex gap-4 text-sm text-gray-600">
-          {features?.bedrooms && (
-            <span>{features.bedrooms} beds</span>
-          )}
-          {features?.bathrooms && (
-            <span>{features.bathrooms} baths</span>
-          )}
-          {features?.parkingSpaces && (
-            <span>{features.parkingSpaces} parking</span>
-          )}
+        <div className="mb-2 flex gap-4 text-sm text-gray-600 dark:text-gray-300">
+          {features?.bedrooms && <span>{features.bedrooms} beds</span>}
+          {features?.bathrooms && <span>{features.bathrooms} baths</span>}
+          {features?.parkingSpaces && <span>{features.parkingSpaces} parking</span>}
         </div>
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-gray-500 dark:text-gray-400">
           <div>{property.propertyType}</div>
           {valuation?.estimatedValue && (
-            <div className="mt-1 font-semibold text-gray-900">
+            <div className="mt-1 font-semibold text-gray-900 dark:text-white">
               Est. ${valuation.estimatedValue}
             </div>
           )}
