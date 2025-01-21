@@ -3,6 +3,7 @@ import { db } from "~/server/db";
 import { properties, propertyImages, propertyFeatures, addresses, propertyValuations } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 import { Carousel } from "~/components/ui/carousel";
+import { calculateOnePercentRule } from "~/lib/utils";
 
 async function getPropertyDetails(id: string) {
   console.log('Fetching property details for ID:', id);
@@ -35,6 +36,7 @@ async function getPropertyDetails(id: string) {
         priceRange: propertyValuations.priceRange,
         confidence: propertyValuations.confidence,
         lastUpdated: propertyValuations.lastUpdated,
+        rentalValue: propertyValuations.rentalValue,
       },
     })
     .from(properties)
@@ -77,7 +79,7 @@ async function getPropertyDetails(id: string) {
 
 export default async function FullPagePropertyView({ id }: { id: string }) {
   const { property, address, features, valuation, images } = await getPropertyDetails(id);
-
+  
   return (
     <div className="container mx-auto max-w-6xl px-4 py-8">
       <div className="mb-6">
@@ -162,6 +164,34 @@ export default async function FullPagePropertyView({ id }: { id: string }) {
                 <span className="text-sm text-gray-600 dark:text-gray-300">Estimated Value</span>
                 <p className="text-2xl font-bold text-gray-900 dark:text-white">${valuation.estimatedValue}</p>
               </div>
+              {valuation.rentalValue && (
+                <div className="mb-4">
+                  <span className="text-sm text-gray-600 dark:text-gray-300">Weekly Rental</span>
+                  <p className="font-medium text-gray-900 dark:text-white">
+                    ${Number(valuation.rentalValue).toLocaleString()}
+                  </p>
+                  {calculateOnePercentRule(
+                    Number(valuation.estimatedValue),
+                    Number(valuation.rentalValue)
+                  ) && (
+                    <div className="mt-2">
+                      <span className="text-sm text-gray-600 dark:text-gray-300">1% Rule Analysis</span>
+                      <p className={`font-medium ${
+                        calculateOnePercentRule(Number(valuation.estimatedValue), Number(valuation.rentalValue))! >= 1 
+                          ? 'text-green-600 dark:text-green-400' 
+                          : 'text-red-600 dark:text-red-400'
+                      }`}>
+                        {calculateOnePercentRule(Number(valuation.estimatedValue), Number(valuation.rentalValue))}%
+                        <span className="ml-2 text-sm text-gray-600 dark:text-gray-300">
+                          ({calculateOnePercentRule(Number(valuation.estimatedValue), Number(valuation.rentalValue))! >= 1 
+                            ? 'Meets 1% rule' 
+                            : 'Below 1% rule'})
+                        </span>
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
               {valuation.priceRange && (
                 <div className="mb-4">
                   <span className="text-sm text-gray-600 dark:text-gray-300">Price Range</span>
