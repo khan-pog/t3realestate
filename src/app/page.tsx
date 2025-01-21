@@ -7,23 +7,10 @@ import { calculateOnePercentRule } from "~/lib/utils";
 export const dynamic = "force-dynamic";
 
 function PropertyCard({ property, address, features, primaryImage, valuation }: Awaited<ReturnType<typeof getProperties>>[0]) {
-  console.log('PropertyCard Valuation Data:', {
-    estimatedValue: valuation?.estimatedValue,
-    rentalValue: valuation?.rentalValue
-  });
-
   const onePercentRule = calculateOnePercentRule(
     valuation?.estimatedValue ? Number(valuation.estimatedValue.replace(/[$,]/g, '')) : null,
     valuation?.rentalValue ? Number(valuation.rentalValue.replace(/[$,]/g, '')) : null
   );
-
-  console.log('PropertyCard 1% Rule Calculation:', {
-    propertyId: property.id,
-    address: address?.shortAddress,
-    cleanedEstimatedValue: valuation?.estimatedValue ? Number(valuation.estimatedValue.replace(/[$,]/g, '')) : null,
-    cleanedRentalValue: valuation?.rentalValue ? Number(valuation.rentalValue.replace(/[$,]/g, '')) : null,
-    onePercentRule
-  });
 
   return (
     <Link

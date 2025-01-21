@@ -171,28 +171,10 @@ export default async function FullPagePropertyView({ id }: { id: string }) {
                     ${valuation.rentalValue}
                   </p>
                   {(() => {
-                    console.log('FullPageView Valuation Data:', {
-                      estimatedValue: valuation.estimatedValue,
-                      rentalValue: valuation.rentalValue
-                    });
-
-                    const cleanedEstimatedValue = valuation.estimatedValue ? Number(valuation.estimatedValue.replace(/[$,]/g, '')) : null;
-                    const cleanedRentalValue = valuation.rentalValue ? Number(valuation.rentalValue.replace(/[$,]/g, '')) : null;
-                    
-                    console.log('FullPageView Cleaned Values:', {
-                      cleanedEstimatedValue,
-                      cleanedRentalValue
-                    });
-
                     const onePercentRule = calculateOnePercentRule(
-                      cleanedEstimatedValue,
-                      cleanedRentalValue
+                      valuation.estimatedValue ? Number(valuation.estimatedValue.replace(/[$,]/g, '')) : null,
+                      valuation.rentalValue ? Number(valuation.rentalValue.replace(/[$,]/g, '')) : null
                     );
-                    
-                    console.log('FullPageView 1% Rule Result:', {
-                      onePercentRule,
-                      meetsRule: onePercentRule ? onePercentRule >= 1 : false
-                    });
                     
                     return onePercentRule && (
                       <div className="mt-2">
