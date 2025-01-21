@@ -151,6 +151,11 @@ export async function importData() {
         // Handle valuation data
         if (property.valuationData) {
           try {
+            // First delete any existing valuation for this property
+            await db.delete(propertyValuations)
+              .where(eq(propertyValuations.propertyId, property.id));
+            
+            // Then insert the new valuation
             await db.insert(propertyValuations).values({
               propertyId: property.id,
               source: property.valuationData.source,
@@ -161,18 +166,6 @@ export async function importData() {
               rentalValue: property.valuationData.rental?.value || null,
               rentalPeriod: property.valuationData.rental?.period || null,
               rentalConfidence: property.valuationData.rental?.confidence || null,
-            }).onConflictDoUpdate({
-              target: propertyValuations.propertyId,
-              set: {
-                source: property.valuationData.source,
-                confidence: property.valuationData.confidence || null,
-                estimatedValue: property.valuationData.estimatedValue || null,
-                priceRange: property.valuationData.priceRange || null,
-                lastUpdated: new Date(),
-                rentalValue: property.valuationData.rental?.value || null,
-                rentalPeriod: property.valuationData.rental?.period || null,
-                rentalConfidence: property.valuationData.rental?.confidence || null,
-              }
             });
             console.log(`Valuation data processed for property ${property.id}`);
           } catch (valuationError) {
