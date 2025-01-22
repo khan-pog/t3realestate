@@ -13,7 +13,7 @@ const sortOptions = [
 export default function SortSelect() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const currentSort = searchParams.get('sort') || 'newest';
+  const currentSort = searchParams.get('sort') || 'one-percent';
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const params = new URLSearchParams(searchParams);

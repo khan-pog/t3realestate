@@ -75,7 +75,7 @@ function PropertyCard({ property, address, features, primaryImage, valuation, pr
 }
 
 async function Properties({ searchParams }: { searchParams: { sort?: string } }) {
-  const properties = await getProperties(searchParams.sort as any || 'newest');
+  const properties = await getProperties(searchParams.sort as any || 'one-percent');
 
   return (
     <div className="flex flex-col gap-6">
