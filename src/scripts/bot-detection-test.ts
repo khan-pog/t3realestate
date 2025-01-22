@@ -3,6 +3,14 @@ import 'dotenv/config'
 import path from 'path'
 import fs from 'fs/promises'
 
+// Add these constants at the top of the file, after the imports
+const RATE_LIMIT = {
+  REQUESTS_PER_MINUTE: 10,
+  DELAY_BETWEEN_REQUESTS: 60000 / 10, // 6000ms = 10 requests per minute
+  RETRY_DELAY: 60000, // 1 minute wait if rate limited
+  MAX_RETRIES: 3
+};
+
 async function runWithTimeout(promise, timeout, errorMessage) {
   let timeoutHandle;
   const timeoutPromise = new Promise((_, reject) => {
@@ -87,21 +95,45 @@ async function processAllProperties() {
     const addresses = await getAllAddresses();
     console.log(`Found ${addresses.length} properties to process`);
     
-    // Process addresses sequentially to avoid overwhelming the service
+    let processedCount = 0;
+    let lastRequestTime = 0;
+    
+    // Process addresses sequentially with rate limiting
     for (const address of addresses) {
-      console.log(`\nProcessing property: ${address}`);
-      try {
-        await runBotDetectionTest(address);
-        // Add a delay between requests to avoid rate limiting
-        await new Promise(resolve => setTimeout(resolve, 5000)); // 5 second delay
-      } catch (error) {
-        console.error(`Failed to process ${address}:`, error);
-        // Continue with next address even if one fails
-        continue;
+      console.log(`\nProcessing property ${processedCount + 1}/${addresses.length}: ${address}`);
+      
+      // Calculate delay needed to maintain rate limit
+      const now = Date.now();
+      const timeSinceLastRequest = now - lastRequestTime;
+      if (timeSinceLastRequest < RATE_LIMIT.DELAY_BETWEEN_REQUESTS) {
+        const delayNeeded = RATE_LIMIT.DELAY_BETWEEN_REQUESTS - timeSinceLastRequest;
+        console.log(`Rate limiting: waiting ${delayNeeded}ms before next request...`);
+        await new Promise(resolve => setTimeout(resolve, delayNeeded));
+      }
+      
+      let retries = 0;
+      while (retries <= RATE_LIMIT.MAX_RETRIES) {
+        try {
+          await runBotDetectionTest(address);
+          lastRequestTime = Date.now();
+          processedCount++;
+          break; // Success, move to next address
+        } catch (error) {
+          if (error.message?.includes('429') || error.message?.toLowerCase().includes('rate limit')) {
+            retries++;
+            if (retries <= RATE_LIMIT.MAX_RETRIES) {
+              console.log(`Rate limit detected. Attempt ${retries}/${RATE_LIMIT.MAX_RETRIES}. Waiting ${RATE_LIMIT.RETRY_DELAY/1000} seconds...`);
+              await new Promise(resolve => setTimeout(resolve, RATE_LIMIT.RETRY_DELAY));
+              continue;
+            }
+          }
+          console.error(`Failed to process ${address}:`, error);
+          break; // Non-rate-limit error, move to next address
+        }
       }
     }
     
-    console.log('\nFinished processing all properties');
+    console.log(`\nFinished processing ${processedCount}/${addresses.length} properties`);
   } catch (error) {
     console.error('Failed to process properties:', error);
   }

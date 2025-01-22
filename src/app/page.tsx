@@ -7,7 +7,7 @@ import SortSelect from '~/components/property/sort-select';
 
 export const dynamic = "force-dynamic";
 
-function PropertyCard({ property, address, features, primaryImage, valuation }: Awaited<ReturnType<typeof getProperties>>[0]) {
+function PropertyCard({ property, address, features, primaryImage, valuation, price }: Awaited<ReturnType<typeof getProperties>>[0]) {
   const onePercentRule = calculateOnePercentRule(
     valuation?.estimatedValue ? Number(valuation.estimatedValue.replace(/[$,]/g, '')) : null,
     valuation?.rentalValue ? Number(valuation.rentalValue.replace(/[$,]/g, '')) : null
@@ -46,10 +46,15 @@ function PropertyCard({ property, address, features, primaryImage, valuation }: 
         </div>
         <div className="text-sm text-gray-800 dark:text-gray-100">
           <div>{property.propertyType}</div>
+          {price?.displayPrice && (
+            <div className="mt-1 font-bold text-gray-900 dark:text-white">
+              {price.displayPrice}
+            </div>
+          )}
           {valuation?.estimatedValue && (
             <>
-              <div className="mt-1 font-bold text-gray-900 dark:text-white">
-                Est. ${valuation.estimatedValue}
+              <div className="mt-1 font-semibold text-gray-700 dark:text-gray-300">
+                Est. {valuation.estimatedValue}
               </div>
               {valuation.rentalValue && (
                 <div className="mt-1 text-sm">

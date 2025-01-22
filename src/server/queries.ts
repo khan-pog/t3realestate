@@ -5,7 +5,7 @@ import { images } from "./db/schema";
 import { and, eq, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import analyticsServerClient from "./analytics";
-import { properties, propertyImages, propertyFeatures, addresses, propertyValuations } from "./db/schema";
+import { properties, propertyImages, propertyFeatures, addresses, propertyValuations, propertyPrices } from "./db/schema";
 import { desc, asc } from "drizzle-orm";
 
 export async function getMyImages() {
@@ -84,6 +84,7 @@ export async function getProperties(sortBy: SortOption = 'newest') {
           rentalValue: propertyValuations.rentalValue,
           lastUpdated: propertyValuations.lastUpdated,
         },
+        price: propertyPrices
       })
       .from(properties)
       .leftJoin(addresses, eq(addresses.propertyId, properties.id))
@@ -95,7 +96,8 @@ export async function getProperties(sortBy: SortOption = 'newest') {
           eq(propertyImages.order, 1)
         )
       )
-      .leftJoin(propertyValuations, eq(propertyValuations.propertyId, properties.id));
+      .leftJoin(propertyValuations, eq(propertyValuations.propertyId, properties.id))
+      .leftJoin(propertyPrices, eq(propertyPrices.propertyId, properties.id));
 
     // Apply sorting based on parameter
     switch (sortBy) {

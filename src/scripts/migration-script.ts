@@ -1,5 +1,5 @@
 import { db } from "../server/db";
-import { properties, addresses, propertyFeatures, propertyImages, propertyValuations, listingCompanies } from "../server/db/schema";
+import { properties, addresses, propertyFeatures, propertyImages, propertyValuations, listingCompanies, propertyPrices } from "../server/db/schema";
 import { eq } from "drizzle-orm";
 import searchData from "./search.json";
 
@@ -173,6 +173,36 @@ export async function importData() {
           }
         } else {
           console.warn(`No valuation data found for property ${property.id}`);
+        }
+
+        // Handle price updates
+        const existingPrice = await db.select()
+          .from(propertyPrices)
+          .where(eq(propertyPrices.propertyId, property.id))
+          .limit(1);
+
+        const newPriceData = {
+          propertyId: property.id,
+          displayPrice: property.price?.display || null,
+          priceFrom: property.priceDetails?.from || null,
+          priceTo: property.priceDetails?.to || null,
+          searchRange: property.price?.searchRange || null,
+          priceInformation: property.price?.information || null,
+          updatedAt: new Date(),
+        };
+
+        if (existingPrice.length > 0) {
+          // Update if price details have changed
+          if (JSON.stringify(existingPrice[0]) !== JSON.stringify(newPriceData)) {
+            await db.update(propertyPrices)
+              .set(newPriceData)
+              .where(eq(propertyPrices.propertyId, property.id));
+            console.log(`Updated price for property ${property.id}`);
+          }
+        } else {
+          // Insert new price record
+          await db.insert(propertyPrices).values(newPriceData);
+          console.log(`Inserted new price for property ${property.id}`);
         }
 
       } catch (propertyError) {

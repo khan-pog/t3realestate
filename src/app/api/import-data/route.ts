@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "~/server/db";
-import { properties, addresses, propertyFeatures, propertyImages, propertyValuations, listingCompanies } from "~/server/db/schema";
+import { properties, addresses, propertyFeatures, propertyImages, propertyValuations, listingCompanies, propertyPrices } from "~/server/db/schema";
 import searchData from "~/scripts/search.json";
 
 export async function POST() {
@@ -97,6 +97,29 @@ export async function POST() {
             rentalValue: property.valuationData.rental?.value || null,
             rentalPeriod: property.valuationData.rental?.period || null,
             rentalConfidence: property.valuationData.rental?.confidence || null,
+          }
+        });
+      }
+
+      // Handle price data
+      if (property.price || property.priceDetails) {
+        await db.insert(propertyPrices).values({
+          propertyId: property.id,
+          displayPrice: property.price?.display || null,
+          priceFrom: property.priceDetails?.from || null,
+          priceTo: property.priceDetails?.to || null,
+          searchRange: property.price?.searchRange || null,
+          priceInformation: property.price?.information || null,
+          updatedAt: new Date(),
+        }).onConflictDoUpdate({
+          target: propertyPrices.propertyId,
+          set: {
+            displayPrice: property.price?.display || null,
+            priceFrom: property.priceDetails?.from || null,
+            priceTo: property.priceDetails?.to || null,
+            searchRange: property.price?.searchRange || null,
+            priceInformation: property.price?.information || null,
+            updatedAt: new Date(),
           }
         });
       }

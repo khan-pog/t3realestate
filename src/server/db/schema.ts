@@ -95,3 +95,14 @@ export const propertyValuations = createTable("property_valuations", {
   rentalPeriod: varchar("rentalperiod"),
   rentalConfidence: varchar("rentalconfidence"),
 });
+
+export const propertyPrices = createTable("property_prices", {
+  id: serial("id").primaryKey(),
+  propertyId: varchar("propertyid").notNull(),
+  displayPrice: varchar("displayprice"),
+  priceFrom: varchar("pricefrom"),
+  priceTo: varchar("priceto"),
+  searchRange: varchar("searchrange"),
+  priceInformation: varchar("priceinformation"),
+  updatedAt: timestamp("updatedat").default(sql`CURRENT_TIMESTAMP`).notNull(),
+});
