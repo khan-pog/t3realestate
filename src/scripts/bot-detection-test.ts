@@ -6,10 +6,13 @@ import fs from 'fs/promises'
 // Add these constants at the top of the file, after the imports
 const RATE_LIMIT = {
   REQUESTS_PER_MINUTE: 10,
-  DELAY_BETWEEN_REQUESTS: 60000 / 10, // 6000ms = 10 requests per minute
-  RETRY_DELAY: 60000, // 1 minute wait if rate limited
+  DELAY_BETWEEN_REQUESTS: 6000 / 10, // 6000ms = 10 requests per minute
+  RETRY_DELAY: 6000, // 1 minute wait if rate limited
   MAX_RETRIES: 3
 };
+
+// Add this constant at the top with other rate limits
+const LONG_WAIT = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
 
 async function runWithTimeout(promise, timeout, errorMessage) {
   let timeoutHandle;
@@ -92,17 +95,37 @@ async function getAllAddresses(): Promise<string[]> {
 
 async function processAllProperties() {
   try {
+
     const addresses = await getAllAddresses();
-    console.log(`Found ${addresses.length} properties to process`);
+    const totalProperties = addresses.length;
+    
+    console.log('\n=== Starting Property Processing ===');
+    console.log(`Total Properties to Process: ${totalProperties}`);
+    console.log('===================================\n');
     
     let processedCount = 0;
+    let successCount = 0;
     let lastRequestTime = 0;
+    let currentProfileIndex = 0;
     
-    // Process addresses sequentially with rate limiting
+    const failedAddresses: { address: string | null, reason: string }[] = [];
+    
     for (const address of addresses) {
-      console.log(`\nProcessing property ${processedCount + 1}/${addresses.length}: ${address}`);
+      processedCount++;
       
-      // Calculate delay needed to maintain rate limit
+      // Add validation for null/empty addresses
+      if (!address) {
+        console.error(`\n[${processedCount}/${totalProperties}] ERROR: Invalid address (null or empty)`);
+        failedAddresses.push({ address: null, reason: 'Invalid or null address' });
+        console.error('Skipping to next property...\n');
+        continue;
+      }
+      
+      const progressPercent = ((processedCount / totalProperties) * 100).toFixed(1);
+      console.log(`\n[${processedCount}/${totalProperties}] (${progressPercent}%) Processing: ${address}`);
+      console.log('─'.repeat(50));
+      
+      // Rate limiting
       const now = Date.now();
       const timeSinceLastRequest = now - lastRequestTime;
       if (timeSinceLastRequest < RATE_LIMIT.DELAY_BETWEEN_REQUESTS) {
@@ -111,29 +134,87 @@ async function processAllProperties() {
         await new Promise(resolve => setTimeout(resolve, delayNeeded));
       }
       
-      let retries = 0;
-      while (retries <= RATE_LIMIT.MAX_RETRIES) {
+      let success = false;
+      let attempts = 0;
+      
+      while (!success && attempts < 50) { // Added max attempts limit
+        attempts++;
         try {
-          await runBotDetectionTest(address);
-          lastRequestTime = Date.now();
-          processedCount++;
-          break; // Success, move to next address
-        } catch (error) {
-          if (error.message?.includes('429') || error.message?.toLowerCase().includes('rate limit')) {
-            retries++;
-            if (retries <= RATE_LIMIT.MAX_RETRIES) {
-              console.log(`Rate limit detected. Attempt ${retries}/${RATE_LIMIT.MAX_RETRIES}. Waiting ${RATE_LIMIT.RETRY_DELAY/1000} seconds...`);
-              await new Promise(resolve => setTimeout(resolve, RATE_LIMIT.RETRY_DELAY));
-              continue;
-            }
+          if (typeof address !== 'string') {
+            throw new Error(`Invalid address format: ${JSON.stringify(address)}`);
           }
-          console.error(`Failed to process ${address}:`, error);
-          break; // Non-rate-limit error, move to next address
+          
+          await runBotDetectionTest(address);
+          success = true;
+          successCount++;
+          lastRequestTime = Date.now();
+        } catch (error) {
+          console.error(`Attempt ${attempts} failed for ${address}:`, error.message);
+          
+          if (attempts >= 50) {
+            failedAddresses.push({ address, reason: `Max attempts (50) reached: ${error.message}` });
+            break;
+          }
+          
+          // If property not found, log it and move on
+          if (error.message?.includes('No property found')) {
+            console.log(`\nNo property found for address: ${address}`);
+            // Create and save blank valuation data
+            const blankValuationData = {
+              status: 'not_found',
+              confidence: null,
+              estimatedValue: null,
+              pricePerMeter: null,
+              priceRange: null,
+              lastUpdated: null,
+              rental: {
+                confidence: null,
+                value: null,
+                period: null,
+                message: null
+              }
+            };
+            await appendValuationData(address, blankValuationData);
+            success = true; // Move to next property
+            continue;
+          }
+          
+          // Handle different types of errors with appropriate wait times
+          if (error.message?.includes('net::ERR_CONNECTION_ABORTED')) {
+            const waitUntil = new Date(Date.now() + LONG_WAIT);
+            console.log(`Connection aborted. Waiting 3 hours until ${waitUntil.toLocaleTimeString()}...`);
+            await new Promise(resolve => setTimeout(resolve, LONG_WAIT));
+          } else if (error.message?.includes('500')) {
+            console.log(`Server error (500). Waiting 30 seconds before retry...`);
+            await new Promise(resolve => setTimeout(resolve, 30000));
+          } else if (error.message?.includes('429') || error.message?.toLowerCase().includes('rate limit')) {
+            console.log(`Rate limit detected. Waiting ${RATE_LIMIT.RETRY_DELAY/1000} seconds...`);
+            await new Promise(resolve => setTimeout(resolve, RATE_LIMIT.RETRY_DELAY));
+          } else {
+            const waitTime = Math.min(attempts * 10000, 300000); // Increase wait time with each attempt, max 5 minutes
+            console.log(`Error occurred. Waiting ${waitTime/1000} seconds before retry ${attempts}...`);
+            await new Promise(resolve => setTimeout(resolve, waitTime));
+          }
         }
       }
     }
     
-    console.log(`\nFinished processing ${processedCount}/${addresses.length} properties`);
+    // Print summary at the end
+    console.log('\n=== Processing Summary ===');
+    console.log(`Total Properties: ${totalProperties}`);
+    console.log(`Successfully Processed: ${successCount}`);
+    console.log(`Failed: ${failedAddresses.length}`);
+    
+    if (failedAddresses.length > 0) {
+      console.log('\nFailed Addresses:');
+      console.log('─'.repeat(50));
+      failedAddresses.forEach(({ address, reason }, index) => {
+        console.log(`${index + 1}. Address: ${address || 'NULL'}`);
+        console.log(`   Reason: ${reason}`);
+        console.log('─'.repeat(50));
+      });
+    }
+    
   } catch (error) {
     console.error('Failed to process properties:', error);
   }
@@ -281,18 +362,17 @@ async function runBotDetectionTest(address: string) {
     throw error;
   } finally {
     // Clean up resources regardless of success or failure
-    if (page) {
+    if (page && browser) {
       try {
+        console.log('Finishing Rebrowser run...');
         await page._client().send('Rebrowser.finishRun');
-      } catch (finishError) {
-        console.error('Failed to finish run:', finishError);
-      }
-    }
-    if (browser) {
-      try {
+        console.log('Closing browser...');
+        await new Promise(resolve => setTimeout(resolve, 2000));
         await browser.close();
-      } catch (closeError) {
-        console.error('Failed to close browser:', closeError);
+        console.log('Browser session cleaned up');
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      } catch (cleanupError) {
+        console.error('Failed to cleanup browser session:', cleanupError);
       }
     }
   }
