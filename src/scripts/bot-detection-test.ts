@@ -5,14 +5,14 @@ import fs from 'fs/promises'
 
 // Add these constants at the top of the file, after the imports
 const RATE_LIMIT = {
-  REQUESTS_PER_MINUTE: 10,
-  DELAY_BETWEEN_REQUESTS: 6000 / 10, // 6000ms = 10 requests per minute
-  RETRY_DELAY: 6000, // 1 minute wait if rate limited
+  REQUESTS_PER_MINUTE: 20,
+  DELAY_BETWEEN_REQUESTS: 3000,
+  RETRY_DELAY: 30000,
   MAX_RETRIES: 3
 };
 
 // Add this constant at the top with other rate limits
-const LONG_WAIT = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
+const LONG_WAIT = 1 * 60 * 60 * 1000; // 1 hour in milliseconds
 
 function cleanAddress(fullAddress: string | null): string {
   if (!fullAddress) {
@@ -155,7 +155,7 @@ async function processAllProperties() {
       let success = false;
       let attempts = 0;
       
-      while (!success && attempts < 50) { // Added max attempts limit
+      while (!success && attempts < 25) {
         attempts++;
         try {
           if (typeof address !== 'string') {
@@ -169,8 +169,8 @@ async function processAllProperties() {
         } catch (error) {
           console.error(`Attempt ${attempts} failed for ${address}:`, error.message);
           
-          if (attempts >= 50) {
-            failedAddresses.push({ address, reason: `Max attempts (50) reached: ${error.message}` });
+          if (attempts >= 25) {
+            failedAddresses.push({ address, reason: `Max attempts (25) reached: ${error.message}` });
             break;
           }
           
@@ -200,16 +200,16 @@ async function processAllProperties() {
           // Handle different types of errors with appropriate wait times
           if (error.message?.includes('net::ERR_CONNECTION_ABORTED')) {
             const waitUntil = new Date(Date.now() + LONG_WAIT);
-            console.log(`Connection aborted. Waiting 3 hours until ${waitUntil.toLocaleTimeString()}...`);
+            console.log(`Connection aborted. Waiting 1 hour until ${waitUntil.toLocaleTimeString()}...`);
             await new Promise(resolve => setTimeout(resolve, LONG_WAIT));
           } else if (error.message?.includes('500')) {
-            console.log(`Server error (500). Waiting 30 seconds before retry...`);
-            await new Promise(resolve => setTimeout(resolve, 30000));
+            console.log(`Server error (500). Waiting 15 seconds before retry...`);
+            await new Promise(resolve => setTimeout(resolve, 15000));
           } else if (error.message?.includes('429') || error.message?.toLowerCase().includes('rate limit')) {
             console.log(`Rate limit detected. Waiting ${RATE_LIMIT.RETRY_DELAY/1000} seconds...`);
             await new Promise(resolve => setTimeout(resolve, RATE_LIMIT.RETRY_DELAY));
           } else {
-            const waitTime = Math.min(attempts * 10000, 300000); // Increase wait time with each attempt, max 5 minutes
+            const waitTime = Math.min(attempts * 5000, 120000);
             console.log(`Error occurred. Waiting ${waitTime/1000} seconds before retry ${attempts}...`);
             await new Promise(resolve => setTimeout(resolve, waitTime));
           }
@@ -250,7 +250,7 @@ async function runBotDetectionTest(address: string) {
         browserWSEndpoint: `wss://ws.rebrowser.net/?apiKey=${process.env.REBROWSER_API_KEY}`,
         defaultViewport: null
       }),
-      30000, // Increased timeout to 30 seconds
+      15000,
       'Failed to connect to Rebrowser'
     );
 
@@ -295,7 +295,7 @@ async function runBotDetectionTest(address: string) {
       );
       
       // Wait longer for the suggestion to appear and click it
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 10000));
       await page.click('.mapOptionToListNode__OptionContainer-sc-lnbl9x-1');
 
       // Wait a moment for any animations to complete
@@ -385,10 +385,10 @@ async function runBotDetectionTest(address: string) {
         console.log('Finishing Rebrowser run...');
         await page._client().send('Rebrowser.finishRun');
         console.log('Closing browser...');
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, 1000));
         await browser.close();
         console.log('Browser session cleaned up');
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, 1000));
       } catch (cleanupError) {
         console.error('Failed to cleanup browser session:', cleanupError);
       }
