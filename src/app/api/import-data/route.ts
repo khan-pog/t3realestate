@@ -14,6 +14,7 @@ export async function POST() {
         description: property.description,
         createdAt: new Date(),
         updatedAt: new Date(),
+        scrapedAt: property.scraped_at ? new Date(property.scraped_at) : new Date(),
       });
 
       // Insert address

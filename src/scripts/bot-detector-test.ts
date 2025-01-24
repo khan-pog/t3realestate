@@ -35,8 +35,10 @@ async function runBotDetectionTest() {
       const card = document.querySelector('.residential-card');
       if (!card) return null;
       
+      const rawAddress = card.querySelector('.residential-card__address-heading')?.textContent?.trim();
+      
       return {
-        address: card.querySelector('.residential-card__address-heading')?.textContent?.trim(),
+        address: cleanAddress(rawAddress),
         price: card.querySelector('.property-price')?.textContent?.trim(),
         propertyType: card.querySelector('.dmDgvy p')?.textContent?.trim(),
         features: {

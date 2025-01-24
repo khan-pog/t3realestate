@@ -14,6 +14,24 @@ const RATE_LIMIT = {
 // Add this constant at the top with other rate limits
 const LONG_WAIT = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
 
+function cleanAddress(fullAddress: string | null): string {
+  if (!fullAddress) {
+    console.warn('Received null or undefined address');
+    return '';
+  }
+  
+  return fullAddress
+    // Remove ID prefixes
+    .replace(/^ID:\d+\//, '')
+    // Remove Lot numbers at start
+    .replace(/^Lot \d+,\s*/, '')
+    // Remove parenthesized lot numbers
+    .replace(/^\(Lot \d+\)\s*/, '')
+    // Clean up any double spaces and trim
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 async function runWithTimeout(promise, timeout, errorMessage) {
   let timeoutHandle;
   const timeoutPromise = new Promise((_, reject) => {

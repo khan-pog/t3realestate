@@ -23,6 +23,7 @@ export async function importData() {
                 propertyLink: property.propertyLink,
                 description: property.description,
                 updatedAt: new Date(),
+                scrapedAt: property.scraped_at ? new Date(property.scraped_at) : new Date(),
               })
               .where(eq(properties.id, property.id));
             console.log(`Updated property ${property.id}`);
@@ -36,6 +37,7 @@ export async function importData() {
             description: property.description,
             createdAt: new Date(),
             updatedAt: new Date(),
+            scrapedAt: property.scraped_at ? new Date(property.scraped_at) : new Date(),
           });
           console.log(`Inserted new property ${property.id}`);
         }

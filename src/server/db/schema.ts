@@ -62,6 +62,7 @@ export const properties = createTable("property", {
   description: text("description"),
   createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
   updatedAt: timestamp("updatedat"),
+  scrapedAt: timestamp("scrapedat"),
 });
 
 export const propertyFeatures = createTable("property_features", {
