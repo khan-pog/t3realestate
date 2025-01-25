@@ -12,7 +12,7 @@ async function processBatch(startIndex: number, batchSize: number, importId: num
 
   for (const property of batch) {
     try {
-      // Insert property
+      // Insert or update property
       await db.insert(properties).values({
         id: property.id,
         propertyType: property.propertyType,
@@ -21,9 +21,19 @@ async function processBatch(startIndex: number, batchSize: number, importId: num
         createdAt: new Date(),
         updatedAt: new Date(),
         scrapedAt: property.scraped_at ? new Date(property.scraped_at) : new Date(),
+      })
+      .onConflictDoUpdate({
+        target: properties.id,
+        set: {
+          propertyType: property.propertyType,
+          propertyLink: property.propertyLink,
+          description: property.description,
+          updatedAt: new Date(),
+          scrapedAt: property.scraped_at ? new Date(property.scraped_at) : new Date(),
+        }
       });
 
-      // Insert address
+      // Update or insert address
       await db.insert(addresses).values({
         propertyId: property.id,
         shortAddress: property.address.display.shortAddress,
@@ -31,9 +41,19 @@ async function processBatch(startIndex: number, batchSize: number, importId: num
         suburb: property.address.suburb,
         state: property.address.state,
         postcode: property.address.postcode,
+      })
+      .onConflictDoUpdate({
+        target: [addresses.propertyId],
+        set: {
+          shortAddress: property.address.display.shortAddress,
+          fullAddress: property.address.display.fullAddress,
+          suburb: property.address.suburb,
+          state: property.address.state,
+          postcode: property.address.postcode,
+        }
       });
 
-      // Insert features
+      // Update or insert features
       await db.insert(propertyFeatures).values({
         propertyId: property.id,
         bedrooms: property.generalFeatures?.bedrooms?.value ?? null,
@@ -43,10 +63,23 @@ async function processBatch(startIndex: number, batchSize: number, importId: num
         landUnit: property.propertySizes?.land?.sizeUnit?.displayValue || null,
         buildingSize: property.propertySizes?.building?.displayValue ? parseFloat(property.propertySizes.building.displayValue) : null,
         buildingUnit: property.propertySizes?.building?.sizeUnit?.displayValue || null,
+      })
+      .onConflictDoUpdate({
+        target: [propertyFeatures.propertyId],
+        set: {
+          bedrooms: property.generalFeatures?.bedrooms?.value ?? null,
+          bathrooms: property.generalFeatures?.bathrooms?.value ?? null,
+          parkingSpaces: property.generalFeatures?.parkingSpaces?.value ?? null,
+          landSize: property.propertySizes?.land?.displayValue ? parseFloat(property.propertySizes.land.displayValue) : null,
+          landUnit: property.propertySizes?.land?.sizeUnit?.displayValue || null,
+          buildingSize: property.propertySizes?.building?.displayValue ? parseFloat(property.propertySizes.building.displayValue) : null,
+          buildingUnit: property.propertySizes?.building?.sizeUnit?.displayValue || null,
+        }
       });
 
-      // Insert images
+      // For images, delete existing ones and insert new ones
       if (property.images && property.images.length > 0) {
+        await db.delete(propertyImages).where(eq(propertyImages.propertyId, property.id));
         await Promise.all(
           property.images.map((url, index) =>
             db.insert(propertyImages).values({
@@ -81,7 +114,7 @@ async function processBatch(startIndex: number, batchSize: number, importId: num
           });
       }
 
-      // Insert valuations
+      // Update or insert valuations
       if (property.valuationData) {
         await db.insert(propertyValuations).values({
           propertyId: property.id,
@@ -93,10 +126,23 @@ async function processBatch(startIndex: number, batchSize: number, importId: num
           rentalValue: property.valuationData.rental?.value || null,
           rentalPeriod: property.valuationData.rental?.period || null,
           rentalConfidence: property.valuationData.rental?.confidence || null,
+        })
+        .onConflictDoUpdate({
+          target: [propertyValuations.propertyId],
+          set: {
+            source: property.valuationData.source,
+            confidence: property.valuationData.confidence || null,
+            estimatedValue: property.valuationData.estimatedValue || null,
+            priceRange: property.valuationData.priceRange || null,
+            lastUpdated: new Date(),
+            rentalValue: property.valuationData.rental?.value || null,
+            rentalPeriod: property.valuationData.rental?.period || null,
+            rentalConfidence: property.valuationData.rental?.confidence || null,
+          }
         });
       }
 
-      // Insert prices
+      // Update or insert prices
       if (property.price || property.priceDetails) {
         await db.insert(propertyPrices).values({
           propertyId: property.id,
@@ -106,6 +152,17 @@ async function processBatch(startIndex: number, batchSize: number, importId: num
           searchRange: property.price?.searchRange || null,
           priceInformation: property.price?.information || null,
           updatedAt: new Date(),
+        })
+        .onConflictDoUpdate({
+          target: [propertyPrices.propertyId],
+          set: {
+            displayPrice: property.price?.display || null,
+            priceFrom: property.priceDetails?.from || null,
+            priceTo: property.priceDetails?.to || null,
+            searchRange: property.price?.searchRange || null,
+            priceInformation: property.price?.information || null,
+            updatedAt: new Date(),
+          }
         });
       }
     } catch (error) {
