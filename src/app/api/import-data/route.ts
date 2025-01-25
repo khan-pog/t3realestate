@@ -3,6 +3,7 @@ import { db } from "~/server/db";
 import { properties, addresses, propertyFeatures, propertyImages, propertyValuations, listingCompanies, propertyPrices, importProgress } from "~/server/db/schema";
 import searchData from "~/scripts/search.json";
 import { eq } from "drizzle-orm";
+import { processBatch } from "~/server/import-utils";
 
 const BATCH_SIZE = 10; // Adjust based on your needs
 

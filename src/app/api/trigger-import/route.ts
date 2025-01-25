@@ -2,15 +2,9 @@ import { NextResponse } from "next/server";
 import { db } from "~/server/db";
 import { importProgress } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
-import searchData from "~/scripts/search.json";
+import { processBatch } from "~/server/import-utils";
 
 const BATCH_SIZE = 10; // Keep in sync with import-data/route.ts
-
-// Re-use the processBatch function from import-data/route.ts
-// In a real application, this should be moved to a shared utility file
-async function processBatch(startIndex: number, batchSize: number, importId: number) {
-  // ... copy the entire processBatch function from import-data/route.ts ...
-}
 
 export async function POST(request: Request) {
   try {
