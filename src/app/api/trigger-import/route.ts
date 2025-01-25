@@ -133,6 +133,8 @@ export async function POST(request: Request) {
     // Check if this is an initial import or a continuation
     const body = await request.json();
     
+    console.log('Trigger import called with body:', body);
+
     if (!body.importId) {
       // Start new import process
       const [importRecord] = await db.insert(importProgress)
@@ -149,15 +151,31 @@ export async function POST(request: Request) {
       // Process first batch
       const isComplete = await processBatch(0, BATCH_SIZE, importRecord.id);
 
+      console.log('Processing batch starting at offset:', importRecord?.currentOffset);
+
       // If not complete, trigger next batch via API
       if (!isComplete) {
-        const nextBatchUrl = new URL('/api/trigger-import', 'https://' + process.env.VERCEL_URL).toString();
-        await fetch(nextBatchUrl, {
+        const baseUrl = process.env.VERCEL_URL 
+          ? `https://${process.env.VERCEL_URL}` 
+          : process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+        const nextBatchUrl = `${baseUrl}/api/trigger-import`;
+        
+        const response = await fetch(nextBatchUrl, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': process.env.API_SECRET_KEY || ''
+          },
           body: JSON.stringify({ importId: importRecord.id }),
         });
+
+        if (!response.ok) {
+          console.error('Failed to trigger next batch:', await response.text());
+          throw new Error(`Failed to trigger next batch: ${response.status}`);
+        }
       }
+
+      console.log('Batch processed, isComplete:', isComplete);
 
       return NextResponse.json({ 
         success: true, 
@@ -201,18 +219,47 @@ export async function POST(request: Request) {
         currentImport.id
       );
 
+      console.log('Processing batch starting at offset:', currentImport?.currentOffset);
+
       // If not complete, trigger next batch
       if (!isComplete) {
-        // Wait a short delay to avoid rate limiting
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        const nextBatchUrl = new URL('/api/trigger-import', 'https://' + process.env.VERCEL_URL).toString();
-        await fetch(nextBatchUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ importId }),
-        });
+        try {
+          // Wait a short delay to avoid rate limiting
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          const baseUrl = process.env.VERCEL_URL 
+            ? `https://${process.env.VERCEL_URL}` 
+            : process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+          const nextBatchUrl = `${baseUrl}/api/trigger-import`;
+          
+          const response = await fetch(nextBatchUrl, {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+              'Authorization': process.env.API_SECRET_KEY || ''
+            },
+            body: JSON.stringify({ importId }),
+          });
+
+          if (!response.ok) {
+            console.error('Failed to trigger next batch:', await response.text());
+            throw new Error(`Failed to trigger next batch: ${response.status}`);
+          }
+        } catch (error) {
+          console.error('Error triggering next batch:', error);
+          // Update import status to failed
+          await db.update(importProgress)
+            .set({ 
+              status: 'failed',
+              error: 'Failed to trigger next batch',
+              updatedAt: new Date()
+            })
+            .where(eq(importProgress.id, importId));
+          throw error;
+        }
       }
+
+      console.log('Batch processed, isComplete:', isComplete);
 
       return NextResponse.json({ 
         success: true,
