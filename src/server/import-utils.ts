@@ -30,12 +30,87 @@ export async function processBatch(startIndex: number, batchSize: number, import
         postcode: property.address.postcode,
       });
 
-      // ... [rest of the insert operations remain the same]
+      // Insert features
+      await db.insert(propertyFeatures).values({
+        propertyId: property.id,
+        bedrooms: property.generalFeatures?.bedrooms?.value ?? null,
+        bathrooms: property.generalFeatures?.bathrooms?.value ?? null,
+        parkingSpaces: property.generalFeatures?.parkingSpaces?.value ?? null,
+        landSize: property.propertySizes?.land?.displayValue ? parseFloat(property.propertySizes.land.displayValue) : null,
+        landUnit: property.propertySizes?.land?.sizeUnit?.displayValue || null,
+        buildingSize: property.propertySizes?.building?.displayValue ? parseFloat(property.propertySizes.building.displayValue) : null,
+        buildingUnit: property.propertySizes?.building?.sizeUnit?.displayValue || null,
+      });
+
+      // Insert images
+      if (property.images && property.images.length > 0) {
+        await Promise.all(
+          property.images.map((url, index) =>
+            db.insert(propertyImages).values({
+              propertyId: property.id,
+              url: url.replace("{size}", "800x600"),
+              order: index,
+            })
+          )
+        );
+      }
+
+      // Insert listing company
+      if (property.listingCompany) {
+        await db.insert(listingCompanies)
+          .values({
+            id: property.listingCompany.id,
+            name: property.listingCompany.name,
+            phoneNumber: property.listingCompany.phoneNumber,
+            address: property.listingCompany.address,
+            avgRating: property.listingCompany.ratingsReviews?.avgRating || null,
+            totalReviews: property.listingCompany.ratingsReviews?.totalReviews || null,
+          })
+          .onConflictDoUpdate({
+            target: listingCompanies.id,
+            set: {
+              name: property.listingCompany.name,
+              phoneNumber: property.listingCompany.phoneNumber,
+              address: property.listingCompany.address,
+              avgRating: property.listingCompany.ratingsReviews?.avgRating || null,
+              totalReviews: property.listingCompany.ratingsReviews?.totalReviews || null,
+            }
+          });
+      }
+
+      // Insert valuations
+      if (property.valuationData) {
+        await db.insert(propertyValuations).values({
+          propertyId: property.id,
+          source: property.valuationData.source,
+          confidence: property.valuationData.confidence || null,
+          estimatedValue: property.valuationData.estimatedValue || null,
+          priceRange: property.valuationData.priceRange || null,
+          lastUpdated: new Date(),
+          rentalValue: property.valuationData.rental?.value || null,
+          rentalPeriod: property.valuationData.rental?.period || null,
+          rentalConfidence: property.valuationData.rental?.confidence || null,
+        });
+      }
+
+      // Insert prices
+      if (property.price || property.priceDetails) {
+        await db.insert(propertyPrices).values({
+          propertyId: property.id,
+          displayPrice: property.price?.display || null,
+          priceFrom: property.priceDetails?.from || null,
+          priceTo: property.priceDetails?.to || null,
+          searchRange: property.price?.searchRange || null,
+          priceInformation: property.price?.information || null,
+          updatedAt: new Date(),
+        });
+      }
     } catch (error) {
       console.error(`Error processing property ${property.id}:`, error);
       throw error;
     }
   }
+
 
   // Update progress
   await db.update(importProgress)
