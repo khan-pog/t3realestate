@@ -11,6 +11,7 @@ import {
   numeric,
   integer,
   text,
+  unique,
 } from "drizzle-orm/pg-core";
 
 /**
@@ -23,7 +24,7 @@ export const createTable = pgTableCreator((name) => `t3gallery_${name}`);
 
 export const addresses = createTable("address", {
   id: serial("id").primaryKey(),
-  propertyId: varchar("propertyid").notNull(),
+  propertyId: varchar("propertyid").notNull().unique(),
   shortAddress: varchar("shortaddress"),
   fullAddress: varchar("fulladdress"),
   suburb: varchar("suburb"),
@@ -67,7 +68,7 @@ export const properties = createTable("property", {
 
 export const propertyFeatures = createTable("property_features", {
   id: serial("id").primaryKey(),
-  propertyId: varchar("propertyid").notNull(),
+  propertyId: varchar("propertyid").notNull().unique(),
   bedrooms: integer("bedrooms"),
   bathrooms: integer("bathrooms"),
   parkingSpaces: integer("parkingspaces"),
@@ -86,7 +87,7 @@ export const propertyImages = createTable("property_images", {
 
 export const propertyValuations = createTable("property_valuations", {
   id: serial("id").primaryKey(),
-  propertyId: varchar("propertyid").notNull(),
+  propertyId: varchar("propertyid").notNull().unique(),
   source: varchar("source").notNull(),
   confidence: varchar("confidence"),
   estimatedValue: varchar("estimatedvalue"),
@@ -99,7 +100,7 @@ export const propertyValuations = createTable("property_valuations", {
 
 export const propertyPrices = createTable("property_prices", {
   id: serial("id").primaryKey(),
-  propertyId: varchar("propertyid").notNull(),
+  propertyId: varchar("propertyid").notNull().unique(),
   displayPrice: varchar("displayprice"),
   priceFrom: varchar("pricefrom"),
   priceTo: varchar("priceto"),
