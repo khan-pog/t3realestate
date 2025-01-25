@@ -84,7 +84,10 @@ export async function getProperties(sortBy: SortOption = 'newest') {
           rentalValue: propertyValuations.rentalValue,
           lastUpdated: propertyValuations.lastUpdated,
         },
-        price: propertyPrices
+        price: {
+          displayPrice: propertyPrices.displayPrice,
+          priceType: propertyPrices.priceType,
+        }
       })
       .from(properties)
       .leftJoin(addresses, eq(addresses.propertyId, properties.id))
@@ -163,7 +166,10 @@ export async function getProperties(sortBy: SortOption = 'newest') {
         rentalValue: result.valuation?.rentalValue ?? '$0',
         lastUpdated: result.valuation?.lastUpdated ?? null,
       },
-      price: result.price ?? null,
+      price: result.price ? {
+        displayPrice: result.price.displayPrice ?? null,
+        priceType: result.price.priceType ?? null,
+      } : null,
     }));
 
   } catch (error) {
