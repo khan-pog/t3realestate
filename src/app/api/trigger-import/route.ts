@@ -14,6 +14,8 @@ async function processBatch(startIndex: number, batchSize: number, importId: num
 
   for (const property of batch) {
     try {
+      console.log(`Processing property at ${property.address.display.fullAddress}`);
+
       // Insert or update property
       await db.insert(properties).values({
         id: property.id,
@@ -35,6 +37,8 @@ async function processBatch(startIndex: number, batchSize: number, importId: num
         }
       });
 
+      console.log(`✓ Successfully imported base property data`);
+
       // Update or insert address
       await db.insert(addresses).values({
         propertyId: property.id,
@@ -54,6 +58,8 @@ async function processBatch(startIndex: number, batchSize: number, importId: num
           postcode: property.address.postcode || null,
         }
       });
+
+      console.log(`✓ Successfully imported address data`);
 
       // Update or insert features
       await db.insert(propertyFeatures).values({
@@ -79,6 +85,8 @@ async function processBatch(startIndex: number, batchSize: number, importId: num
         }
       });
 
+      console.log(`✓ Successfully imported features data`);
+
       // For images, delete existing ones and insert new ones
       if (property.images && property.images.length > 0) {
         await db.delete(propertyImages).where(eq(propertyImages.propertyId, property.id));
@@ -92,6 +100,8 @@ async function processBatch(startIndex: number, batchSize: number, importId: num
           )
         );
       }
+
+      console.log(`✓ Successfully imported images data`);
 
       // Insert or update valuations
       if (property.valuationData) {
@@ -121,6 +131,8 @@ async function processBatch(startIndex: number, batchSize: number, importId: num
         });
       }
 
+      console.log(`✓ Successfully imported valuations data`);
+
       // Update or insert prices
       if (property.price || property.priceDetails) {
         await db.insert(propertyPrices).values({
@@ -144,8 +156,15 @@ async function processBatch(startIndex: number, batchSize: number, importId: num
           }
         });
       }
+
+      console.log(`✓ Successfully imported prices data`);
+
     } catch (error) {
-      console.error(`Error processing property ${property.id}:`, error);
+      console.error(`✗ Failed to process property at ${property.address.display.fullAddress}:`, error);
+      console.error('Error details:', {
+        propertyId: property.id,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
       throw error;
     }
   }
