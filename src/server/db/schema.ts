@@ -107,3 +107,14 @@ export const propertyPrices = createTable("property_prices", {
   priceInformation: varchar("priceinformation"),
   updatedAt: timestamp("updatedat").default(sql`CURRENT_TIMESTAMP`).notNull(),
 });
+
+export const importProgress = createTable("import_progress", {
+  id: serial("id").primaryKey(),
+  batchSize: integer("batch_size").notNull(),
+  currentOffset: integer("current_offset").notNull(),
+  totalItems: integer("total_items").notNull(),
+  status: varchar("status", { length: 20 }).notNull(), // 'in_progress', 'completed', 'failed'
+  startedAt: timestamp("started_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  error: text("error"),
+});
