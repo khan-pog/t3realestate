@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "~/server/db";
+import { properties, addresses, propertyFeatures, propertyImages, propertyValuations, listingCompanies, propertyPrices, importProgress } from "~/server/db/schema";
 import { importProgress } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 import searchData from "~/scripts/search.json";
