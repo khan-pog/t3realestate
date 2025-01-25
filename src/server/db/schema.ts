@@ -24,11 +24,11 @@ export const createTable = pgTableCreator((name) => `t3gallery_${name}`);
 export const addresses = createTable("address", {
   id: serial("id").primaryKey(),
   propertyId: varchar("propertyid").notNull(),
-  shortAddress: varchar("shortaddress").notNull(),
-  fullAddress: varchar("fulladdress").notNull(),
-  suburb: varchar("suburb").notNull(),
-  state: varchar("state").notNull(),
-  postcode: varchar("postcode").notNull(),
+  shortAddress: varchar("shortaddress"),
+  fullAddress: varchar("fulladdress"),
+  suburb: varchar("suburb"),
+  state: varchar("state"),
+  postcode: varchar("postcode"),
 });
 
 export const images = createTable(
