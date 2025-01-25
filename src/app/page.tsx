@@ -19,33 +19,29 @@ function PropertyCard({ property, address, features, primaryImage, valuation, pr
       className="group relative flex w-full flex-col overflow-hidden rounded-lg bg-white dark:bg-gray-800 shadow-md transition-all hover:shadow-xl sm:w-[300px]"
     >
       <div className="relative h-48 w-full overflow-hidden">
-        {primaryImage?.url ? (
-          <Image
-            src={primaryImage.url}
-            alt={address?.shortAddress ?? "Property"}
-            fill
-            className="object-cover transition-transform duration-300 group-hover:scale-110"
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gray-200 dark:bg-gray-700">
-            <span className="text-gray-800 dark:text-gray-200">No image available</span>
-          </div>
-        )}
+        <Image
+          src={primaryImage?.url ?? '/placeholder-property-image.jpg'}
+          alt={address?.shortAddress ?? "Property"}
+          fill
+          className="object-cover transition-transform duration-300 group-hover:scale-110"
+        />
       </div>
       <div className="p-4">
         <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">
-          {address?.shortAddress}
-          <span className="text-sm text-gray-700 dark:text-gray-200">
-            , {address?.suburb} {address?.state}
-          </span>
+          {address?.shortAddress ?? 'Address unavailable'}
+          {address?.suburb && address?.state && (
+            <span className="text-sm text-gray-700 dark:text-gray-200">
+              , {address.suburb} {address.state}
+            </span>
+          )}
         </h3>
         <div className="mb-2 flex gap-4 text-sm text-gray-800 dark:text-gray-100">
-          {features?.bedrooms && <span>{features.bedrooms} beds</span>}
-          {features?.bathrooms && <span>{features.bathrooms} baths</span>}
-          {features?.parkingSpaces && <span>{features.parkingSpaces} parking</span>}
+          {features?.bedrooms !== null && <span>{features.bedrooms} beds</span>}
+          {features?.bathrooms !== null && <span>{features.bathrooms} baths</span>}
+          {features?.parkingSpaces !== null && <span>{features.parkingSpaces} parking</span>}
         </div>
         <div className="text-sm text-gray-800 dark:text-gray-100">
-          <div>{property.propertyType}</div>
+          <div>{property.propertyType ?? 'Unknown type'}</div>
           {price?.displayPrice && (
             <div className="mt-1 font-bold text-gray-900 dark:text-white">
               {price.displayPrice}
@@ -59,9 +55,9 @@ function PropertyCard({ property, address, features, primaryImage, valuation, pr
               {valuation.rentalValue && (
                 <div className="mt-1 text-sm">
                   Weekly Rent: ${valuation.rentalValue}
-                  {onePercentRule && (
-                    <span className={`ml-2 font-medium ${onePercentRule >= 1 ? 'text-green-600' : 'text-red-600'}`}>
-                      ({onePercentRule}% Rule)
+                  {onePercentRule !== null && (
+                    <span className={`ml-2 font-medium ${onePercentRule >= 1 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                      ({onePercentRule.toFixed(2)}% Rule)
                     </span>
                   )}
                 </div>

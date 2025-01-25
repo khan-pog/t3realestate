@@ -64,13 +64,38 @@ async function getPropertyDetails(id: string) {
 
   console.log('Property images:', images);
 
-  // Add null checks for nested objects
+  // Transform results to handle null values
   const propertyDetails = {
     ...results[0],
     images,
-    address: results[0].address || {},
-    features: results[0].features || {},
-    valuation: results[0].valuation || null
+    address: {
+      shortAddress: results[0].address?.shortAddress ?? 'Address unavailable',
+      fullAddress: results[0].address?.fullAddress ?? '',
+      suburb: results[0].address?.suburb ?? '',
+      state: results[0].address?.state ?? '',
+      postcode: results[0].address?.postcode ?? '',
+    },
+    features: {
+      bedrooms: results[0].features?.bedrooms ?? null,
+      bathrooms: results[0].features?.bathrooms ?? null,
+      parkingSpaces: results[0].features?.parkingSpaces ?? null,
+      landSize: results[0].features?.landSize ?? null,
+      landUnit: results[0].features?.landUnit ?? null,
+      buildingSize: results[0].features?.buildingSize ?? null,
+      buildingUnit: results[0].features?.buildingUnit ?? null,
+    },
+    property: {
+      id: results[0].property.id,
+      propertyType: results[0].property.propertyType ?? 'Unknown type',
+      description: results[0].property.description ?? '',
+    },
+    valuation: results[0].valuation ? {
+      estimatedValue: results[0].valuation.estimatedValue ?? null,
+      priceRange: results[0].valuation.priceRange ?? null,
+      confidence: results[0].valuation.confidence ?? null,
+      lastUpdated: results[0].valuation.lastUpdated ?? null,
+      rentalValue: results[0].valuation.rentalValue ?? null,
+    } : null
   };
 
   console.log('Final property details:', propertyDetails);

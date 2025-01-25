@@ -115,13 +115,17 @@ export async function getProperties(sortBy: SortOption = 'newest') {
         query.orderBy((fields) => sql`${propertyFeatures.bedrooms} DESC NULLS LAST`);
         break;
       case 'one-percent':
-        // Calculate 1% rule in SQL and sort by it
+        // Calculate 1% rule in SQL and sort by it, handling nulls and zeros
         query.orderBy((fields) => sql`
           CASE 
-            WHEN ${propertyValuations.estimatedValue} IS NULL OR ${propertyValuations.rentalValue} IS NULL THEN NULL
+            WHEN ${propertyValuations.estimatedValue} IS NULL 
+              OR ${propertyValuations.rentalValue} IS NULL 
+              OR CAST(REPLACE(REPLACE(${propertyValuations.estimatedValue}, '$', ''), ',', '') AS DECIMAL) = 0 
+              OR CAST(REPLACE(REPLACE(${propertyValuations.rentalValue}, '$', ''), ',', '') AS DECIMAL) = 0 
+            THEN NULL
             ELSE (
               CAST(REPLACE(REPLACE(${propertyValuations.rentalValue}, '$', ''), ',', '') AS DECIMAL) * 52 / 12 /
-              CAST(REPLACE(REPLACE(${propertyValuations.estimatedValue}, '$', ''), ',', '') AS DECIMAL) * 100
+              NULLIF(CAST(REPLACE(REPLACE(${propertyValuations.estimatedValue}, '$', ''), ',', '') AS DECIMAL), 0) * 100
             )
           END DESC NULLS LAST
         `);
@@ -133,7 +137,35 @@ export async function getProperties(sortBy: SortOption = 'newest') {
 
     const results = await query;
     console.log('Properties found:', results.length);
-    return results;
+    
+    // Transform results to handle null values
+    return results.map(result => ({
+      property: {
+        id: result.property.id,
+        propertyType: result.property.propertyType ?? 'Unknown',
+        description: result.property.description ?? '',
+      },
+      address: {
+        shortAddress: result.address?.shortAddress ?? 'Address unavailable',
+        suburb: result.address?.suburb ?? 'Suburb unavailable',
+        state: result.address?.state ?? 'State unavailable',
+      },
+      features: {
+        bedrooms: result.features?.bedrooms ?? 0,
+        bathrooms: result.features?.bathrooms ?? 0,
+        parkingSpaces: result.features?.parkingSpaces ?? 0,
+      },
+      primaryImage: {
+        url: result.primaryImage?.url ?? '/placeholder-property-image.jpg', // Add a default placeholder image
+      },
+      valuation: {
+        estimatedValue: result.valuation?.estimatedValue ?? '$0',
+        rentalValue: result.valuation?.rentalValue ?? '$0',
+        lastUpdated: result.valuation?.lastUpdated ?? null,
+      },
+      price: result.price ?? null,
+    }));
+
   } catch (error) {
     console.error('Error fetching properties:', error);
     throw error;
