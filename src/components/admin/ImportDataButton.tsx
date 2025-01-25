@@ -21,7 +21,24 @@ interface ImportProgress {
   error?: string;
 }
 
-export function ImportDataButton() {
+interface ImportDataButtonProps {
+  onClick: () => Promise<void>;
+  disabled: boolean;
+}
+
+export function ImportDataButton({ onClick, disabled }: ImportDataButtonProps) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white px-4 py-2 rounded-md"
+    >
+      {disabled ? 'Importing...' : 'Start Import'}
+    </button>
+  );
+}
+
+export function ImportDataButtonOld() {
   const [isLoading, setIsLoading] = useState(false);
   const [importId, setImportId] = useState<number | null>(null);
   const [progress, setProgress] = useState<ImportProgress | null>(null);
