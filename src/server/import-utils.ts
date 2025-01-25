@@ -15,13 +15,17 @@ export async function processBatch(startIndex: number, batchSize: number, import
 
   for (const property of batch) {
     try {
-      // Insert property with basic validation
+      // Validate required fields first
       if (!property.id || !property.propertyType) {
         throw new Error('Missing required property fields');
       }
 
+      // Convert property.id to string if it's a number
+      const propertyId = property.id.toString();
+
+      // Insert property first
       await db.insert(properties).values({
-        id: property.id,
+        id: propertyId,
         propertyType: property.propertyType,
         propertyLink: property.propertyLink || '',
         description: property.description || '',
@@ -30,55 +34,48 @@ export async function processBatch(startIndex: number, batchSize: number, import
         scrapedAt: property.scraped_at ? new Date(property.scraped_at) : new Date(),
       });
 
-      // Handle address with better fallbacks and validation
-      let shortAddress = '';
+      // Handle address with proper propertyId
       try {
-        shortAddress = property.address?.display?.shortAddress || 
+        const shortAddress = property.address?.display?.shortAddress || 
           property.address?.fullAddress || 
           `${property.address?.suburb || ''}, ${property.address?.state || ''} ${property.address?.postcode || ''}`.trim();
 
-        // If we still don't have a valid address, create a placeholder
-        if (!shortAddress || shortAddress === ', ') {
-          shortAddress = `Property ${property.id}`;
-        }
-
         await db.insert(addresses).values({
-          propertyid: property.id,
-          shortaddress: shortAddress,
-          fulladdress: property.address?.display?.fullAddress || shortAddress,
+          propertyId: propertyId,
+          shortAddress: shortAddress || `Property ${propertyId}`,
+          fullAddress: property.address?.display?.fullAddress || shortAddress,
           suburb: property.address?.suburb || 'Unknown',
           state: property.address?.state || 'Unknown',
           postcode: property.address?.postcode || '',
         });
       } catch (addressError) {
-        console.warn(`Address error for property ${property.id}:`, addressError);
-        // Continue with other property data even if address fails
+        console.warn(`Address error for property ${propertyId}:`, addressError);
       }
 
-      // Insert features with null safety
+      // Insert features with proper propertyId
       try {
         await db.insert(propertyFeatures).values({
-          propertyid: property.id,
+          propertyId: propertyId,
           bedrooms: property.generalFeatures?.bedrooms?.value ?? null,
           bathrooms: property.generalFeatures?.bathrooms?.value ?? null,
-          parkingspaces: property.generalFeatures?.parkingSpaces?.value ?? null,
-          landsize: property.propertySizes?.land?.displayValue ? 
+          parkingSpaces: property.generalFeatures?.parkingSpaces?.value ?? null,
+          landSize: property.propertySizes?.land?.displayValue ? 
             parseFloat(property.propertySizes.land.displayValue) || null : null,
-          landunit: property.propertySizes?.land?.sizeUnit?.displayValue || null,
-          buildingsize: property.propertySizes?.building?.displayValue ? 
+          landUnit: property.propertySizes?.land?.sizeUnit?.displayValue || null,
+          buildingSize: property.propertySizes?.building?.displayValue ? 
             parseFloat(property.propertySizes.building.displayValue) || null : null,
-          buildingunit: property.propertySizes?.building?.sizeUnit?.displayValue || null,
+          buildingUnit: property.propertySizes?.building?.sizeUnit?.displayValue || null,
         });
       } catch (featuresError) {
-        console.warn(`Features error for property ${property.id}:`, featuresError);
+        console.warn(`Features error for property ${propertyId}:`, featuresError);
       }
 
-      // Insert images
-      if (property.images && Array.isArray(property.images) && property.images.length > 0) {
+      // Insert images with proper propertyId
+      if (property.images && Array.isArray(property.images)) {
         await Promise.all(
           property.images.map((url: string, index: number) =>
             db.insert(propertyImages).values({
-              propertyid: property.id,
+              propertyId: propertyId,
               url: url.replace("{size}", "800x600"),
               order: index,
             })
@@ -112,7 +109,7 @@ export async function processBatch(startIndex: number, batchSize: number, import
       // Insert valuations
       if (property.valuationData) {
         await db.insert(propertyValuations).values({
-          propertyid: property.id,
+          propertyid: propertyId,
           source: property.valuationData.source,
           confidence: property.valuationData.confidence || null,
           estimatedvalue: property.valuationData.estimatedValue || null,
@@ -127,7 +124,7 @@ export async function processBatch(startIndex: number, batchSize: number, import
       // Insert prices
       if (property.price || property.priceDetails) {
         await db.insert(propertyPrices).values({
-          propertyid: property.id,
+          propertyid: propertyId,
           displayprice: property.price?.display || null,
           pricefrom: property.priceDetails?.from || null,
           priceto: property.priceDetails?.to || null,
@@ -142,24 +139,19 @@ export async function processBatch(startIndex: number, batchSize: number, import
         propertyId: property.id, 
         error: error instanceof Error ? error.message : 'Unknown error' 
       });
-      // Continue with next property
       continue;
     }
   }
 
-  // Update progress and include any errors
-  try {
-    await db.update(importProgress)
-      .set({ 
-        currentOffset: endIndex,
-        updatedAt: new Date(),
-        status: endIndex >= searchData.length ? 'completed' : 'in_progress',
-        error: errors.length > 0 ? JSON.stringify(errors) : null
-      })
-      .where(eq(importProgress.id, importId));
-  } catch (updateError) {
-    console.error('Error updating import progress:', updateError);
-  }
+  // Update progress
+  await db.update(importProgress)
+    .set({ 
+      currentOffset: endIndex,
+      updatedAt: new Date(),
+      status: endIndex >= searchData.length ? 'completed' : 'in_progress',
+      error: errors.length > 0 ? JSON.stringify(errors) : null
+    })
+    .where(eq(importProgress.id, importId));
 
   return endIndex >= searchData.length;
 } 
