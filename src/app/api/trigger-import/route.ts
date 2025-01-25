@@ -37,7 +37,6 @@ async function processBatch(startIndex: number, batchSize: number, importId: num
         }
       });
 
-      console.log(`✓ Successfully imported base property data`);
 
       // Update or insert address
       await db.insert(addresses).values({
@@ -59,7 +58,6 @@ async function processBatch(startIndex: number, batchSize: number, importId: num
         }
       });
 
-      console.log(`✓ Successfully imported address data`);
 
       // Update or insert features
       await db.insert(propertyFeatures).values({
@@ -85,7 +83,6 @@ async function processBatch(startIndex: number, batchSize: number, importId: num
         }
       });
 
-      console.log(`✓ Successfully imported features data`);
 
       // For images, delete existing ones and insert new ones
       if (property.images && property.images.length > 0) {
@@ -101,7 +98,6 @@ async function processBatch(startIndex: number, batchSize: number, importId: num
         );
       }
 
-      console.log(`✓ Successfully imported images data`);
 
       // Insert or update valuations
       if (property.valuationData) {
@@ -131,8 +127,6 @@ async function processBatch(startIndex: number, batchSize: number, importId: num
         });
       }
 
-      console.log(`✓ Successfully imported valuations data`);
-
       // Update or insert prices
       if (property.price || property.priceDetails) {
         await db.insert(propertyPrices).values({
@@ -157,7 +151,6 @@ async function processBatch(startIndex: number, batchSize: number, importId: num
         });
       }
 
-      console.log(`✓ Successfully imported prices data`);
 
     } catch (error) {
       console.error(`✗ Failed to process property at ${property.address.display.fullAddress}:`, error);
