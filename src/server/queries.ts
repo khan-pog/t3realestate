@@ -103,25 +103,24 @@ export async function getProperties(sortBy: SortOption = 'newest') {
     switch (sortBy) {
       case 'price-high':
         query.orderBy((fields) => 
-          sql`CAST(REPLACE(REPLACE(${propertyValuations.estimatedValue}, '$', ''), ',', '') AS DECIMAL) DESC NULLS LAST`
+          sql`NULLIF(REGEXP_REPLACE(REPLACE(REPLACE(${propertyValuations.estimatedValue}, '$', ''), ',', ''), '[^0-9.]', ''), '')::DECIMAL DESC NULLS LAST`
         );
         break;
       case 'price-low':
         query.orderBy((fields) => 
-          sql`CAST(REPLACE(REPLACE(${propertyValuations.estimatedValue}, '$', ''), ',', '') AS DECIMAL) ASC NULLS LAST`
+          sql`NULLIF(REGEXP_REPLACE(REPLACE(REPLACE(${propertyValuations.estimatedValue}, '$', ''), ',', ''), '[^0-9.]', ''), '')::DECIMAL ASC NULLS LAST`
         );
         break;
       case 'beds':
         query.orderBy((fields) => sql`${propertyFeatures.bedrooms} DESC NULLS LAST`);
         break;
       case 'one-percent':
-        // Calculate 1% rule in SQL and sort by it
         query.orderBy((fields) => sql`
           CASE 
             WHEN ${propertyValuations.estimatedValue} IS NULL OR ${propertyValuations.rentalValue} IS NULL THEN NULL
             ELSE (
-              CAST(REPLACE(REPLACE(${propertyValuations.rentalValue}, '$', ''), ',', '') AS DECIMAL) * 52 / 12 /
-              CAST(REPLACE(REPLACE(${propertyValuations.estimatedValue}, '$', ''), ',', '') AS DECIMAL) * 100
+              NULLIF(REGEXP_REPLACE(REPLACE(REPLACE(${propertyValuations.rentalValue}, '$', ''), ',', ''), '[^0-9.]', ''), '')::DECIMAL * 52 / 12 /
+              NULLIF(REGEXP_REPLACE(REPLACE(REPLACE(${propertyValuations.estimatedValue}, '$', ''), ',', ''), '[^0-9.]', ''), '')::DECIMAL * 100
             )
           END DESC NULLS LAST
         `);
