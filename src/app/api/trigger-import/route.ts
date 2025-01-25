@@ -7,8 +7,18 @@ import { processBatch } from "~/server/import-utils";
 const BATCH_SIZE = 10; // Keep in sync with import-data/route.ts
 
 export async function POST(request: Request) {
+  let importId: number;
+  
   try {
-    const { importId } = await request.json();
+    const body = await request.json();
+    importId = body.importId;
+
+    if (!importId) {
+      return NextResponse.json(
+        { success: false, error: "Import ID is required" },
+        { status: 400 }
+      );
+    }
 
     // Get current import progress
     const currentImport = await db.query.importProgress.findFirst({
@@ -45,7 +55,6 @@ export async function POST(request: Request) {
 
     // If not complete, trigger next batch
     if (!isComplete) {
-      // Wait a short delay to avoid rate limiting
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       const nextBatchUrl = new URL('/api/trigger-import', 'https://' + process.env.VERCEL_URL).toString();
@@ -65,15 +74,18 @@ export async function POST(request: Request) {
     console.error("Error processing batch:", error);
     
     // Update import status to failed
-    if (request.body) {
-      const { importId } = await request.json();
-      await db.update(importProgress)
-        .set({ 
-          status: 'failed',
-          error: error instanceof Error ? error.message : 'Unknown error',
-          updatedAt: new Date()
-        })
-        .where(eq(importProgress.id, importId));
+    if (importId) {
+      try {
+        await db.update(importProgress)
+          .set({ 
+            status: 'failed',
+            error: error instanceof Error ? error.message : 'Unknown error',
+            updatedAt: new Date()
+          })
+          .where(eq(importProgress.id, importId));
+      } catch (updateError) {
+        console.error("Error updating import status:", updateError);
+      }
     }
 
     return NextResponse.json(

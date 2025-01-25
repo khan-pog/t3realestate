@@ -3,51 +3,82 @@ import { properties, addresses, propertyFeatures, propertyImages, propertyValuat
 import { eq } from "drizzle-orm";
 import searchData from "~/scripts/search.json";
 
+type PropertyError = {
+  propertyId: number;
+  error: string;
+};
+
 export async function processBatch(startIndex: number, batchSize: number, importId: number) {
   const endIndex = Math.min(startIndex + batchSize, searchData.length);
   const batch = searchData.slice(startIndex, endIndex);
+  const errors: PropertyError[] = [];
 
   for (const property of batch) {
     try {
-      // Insert property
+      // Insert property with basic validation
+      if (!property.id || !property.propertyType) {
+        throw new Error('Missing required property fields');
+      }
+
       await db.insert(properties).values({
         id: property.id,
         propertyType: property.propertyType,
-        propertyLink: property.propertyLink,
-        description: property.description,
+        propertyLink: property.propertyLink || '',
+        description: property.description || '',
         createdAt: new Date(),
         updatedAt: new Date(),
         scrapedAt: property.scraped_at ? new Date(property.scraped_at) : new Date(),
       });
 
-      // Insert address
-      await db.insert(addresses).values({
-        propertyId: property.id,
-        shortAddress: property.address.display.shortAddress,
-        fullAddress: property.address.display.fullAddress,
-        suburb: property.address.suburb,
-        state: property.address.state,
-        postcode: property.address.postcode,
-      });
+      // Handle address with better fallbacks and validation
+      let shortAddress = '';
+      try {
+        shortAddress = property.address?.display?.shortAddress || 
+          property.address?.fullAddress || 
+          `${property.address?.suburb || ''}, ${property.address?.state || ''} ${property.address?.postcode || ''}`.trim();
 
-      // Insert features
-      await db.insert(propertyFeatures).values({
-        propertyId: property.id,
-        bedrooms: property.generalFeatures?.bedrooms?.value ?? null,
-        bathrooms: property.generalFeatures?.bathrooms?.value ?? null,
-        parkingSpaces: property.generalFeatures?.parkingSpaces?.value ?? null,
-        landSize: property.propertySizes?.land?.displayValue ? parseFloat(property.propertySizes.land.displayValue) : null,
-        landUnit: property.propertySizes?.land?.sizeUnit?.displayValue || null,
-        buildingSize: property.propertySizes?.building?.displayValue ? parseFloat(property.propertySizes.building.displayValue) : null,
-        buildingUnit: property.propertySizes?.building?.sizeUnit?.displayValue || null,
-      });
+        // If we still don't have a valid address, create a placeholder
+        if (!shortAddress || shortAddress === ', ') {
+          shortAddress = `Property ${property.id}`;
+        }
+
+        await db.insert(addresses).values({
+          propertyid: property.id,
+          shortaddress: shortAddress,
+          fulladdress: property.address?.display?.fullAddress || shortAddress,
+          suburb: property.address?.suburb || 'Unknown',
+          state: property.address?.state || 'Unknown',
+          postcode: property.address?.postcode || '',
+        });
+      } catch (addressError) {
+        console.warn(`Address error for property ${property.id}:`, addressError);
+        // Continue with other property data even if address fails
+      }
+
+      // Insert features with null safety
+      try {
+        await db.insert(propertyFeatures).values({
+          propertyid: property.id,
+          bedrooms: property.generalFeatures?.bedrooms?.value ?? null,
+          bathrooms: property.generalFeatures?.bathrooms?.value ?? null,
+          parkingspaces: property.generalFeatures?.parkingSpaces?.value ?? null,
+          landsize: property.propertySizes?.land?.displayValue ? 
+            parseFloat(property.propertySizes.land.displayValue) || null : null,
+          landunit: property.propertySizes?.land?.sizeUnit?.displayValue || null,
+          buildingsize: property.propertySizes?.building?.displayValue ? 
+            parseFloat(property.propertySizes.building.displayValue) || null : null,
+          buildingunit: property.propertySizes?.building?.sizeUnit?.displayValue || null,
+        });
+      } catch (featuresError) {
+        console.warn(`Features error for property ${property.id}:`, featuresError);
+      }
 
       // Insert images
-      if (property.images && property.images.length > 0) {
+      if (property.images && Array.isArray(property.images) && property.images.length > 0) {
         await Promise.all(
-          property.images.map((url, index) =>
+          property.images.map((url: string, index: number) =>
             db.insert(propertyImages).values({
-              propertyId: property.id,
+              propertyid: property.id,
               url: url.replace("{size}", "800x600"),
               order: index,
             })
@@ -61,19 +92,19 @@ export async function processBatch(startIndex: number, batchSize: number, import
           .values({
             id: property.listingCompany.id,
             name: property.listingCompany.name,
-            phoneNumber: property.listingCompany.phoneNumber,
+            phonenumber: property.listingCompany.phoneNumber,
             address: property.listingCompany.address,
-            avgRating: property.listingCompany.ratingsReviews?.avgRating || null,
-            totalReviews: property.listingCompany.ratingsReviews?.totalReviews || null,
+            avgrating: property.listingCompany.ratingsReviews?.avgRating || null,
+            totalreviews: property.listingCompany.ratingsReviews?.totalReviews || null,
           })
           .onConflictDoUpdate({
             target: listingCompanies.id,
             set: {
               name: property.listingCompany.name,
-              phoneNumber: property.listingCompany.phoneNumber,
+              phonenumber: property.listingCompany.phoneNumber,
               address: property.listingCompany.address,
-              avgRating: property.listingCompany.ratingsReviews?.avgRating || null,
-              totalReviews: property.listingCompany.ratingsReviews?.totalReviews || null,
+              avgrating: property.listingCompany.ratingsReviews?.avgRating || null,
+              totalreviews: property.listingCompany.ratingsReviews?.totalReviews || null,
             }
           });
       }
@@ -81,45 +112,54 @@ export async function processBatch(startIndex: number, batchSize: number, import
       // Insert valuations
       if (property.valuationData) {
         await db.insert(propertyValuations).values({
-          propertyId: property.id,
+          propertyid: property.id,
           source: property.valuationData.source,
           confidence: property.valuationData.confidence || null,
-          estimatedValue: property.valuationData.estimatedValue || null,
-          priceRange: property.valuationData.priceRange || null,
-          lastUpdated: new Date(),
-          rentalValue: property.valuationData.rental?.value || null,
-          rentalPeriod: property.valuationData.rental?.period || null,
-          rentalConfidence: property.valuationData.rental?.confidence || null,
+          estimatedvalue: property.valuationData.estimatedValue || null,
+          pricerange: property.valuationData.priceRange || null,
+          lastupdated: new Date(),
+          rentalvalue: property.valuationData.rental?.value || null,
+          rentalperiod: property.valuationData.rental?.period || null,
+          rentalconfidence: property.valuationData.rental?.confidence || null,
         });
       }
 
       // Insert prices
       if (property.price || property.priceDetails) {
         await db.insert(propertyPrices).values({
-          propertyId: property.id,
-          displayPrice: property.price?.display || null,
-          priceFrom: property.priceDetails?.from || null,
-          priceTo: property.priceDetails?.to || null,
-          searchRange: property.price?.searchRange || null,
-          priceInformation: property.price?.information || null,
-          updatedAt: new Date(),
+          propertyid: property.id,
+          displayprice: property.price?.display || null,
+          pricefrom: property.priceDetails?.from || null,
+          priceto: property.priceDetails?.to || null,
+          searchrange: property.price?.searchRange || null,
+          priceinformation: property.price?.information || null,
+          updatedat: new Date(),
         });
       }
     } catch (error) {
       console.error(`Error processing property ${property.id}:`, error);
-      throw error;
+      errors.push({ 
+        propertyId: property.id, 
+        error: error instanceof Error ? error.message : 'Unknown error' 
+      });
+      // Continue with next property
+      continue;
     }
   }
 
-
-  // Update progress
-  await db.update(importProgress)
-    .set({ 
-      currentOffset: endIndex,
-      updatedAt: new Date(),
-      status: endIndex >= searchData.length ? 'completed' : 'in_progress'
-    })
-    .where(eq(importProgress.id, importId));
+  // Update progress and include any errors
+  try {
+    await db.update(importProgress)
+      .set({ 
+        currentOffset: endIndex,
+        updatedAt: new Date(),
+        status: endIndex >= searchData.length ? 'completed' : 'in_progress',
+        error: errors.length > 0 ? JSON.stringify(errors) : null
+      })
+      .where(eq(importProgress.id, importId));
+  } catch (updateError) {
+    console.error('Error updating import progress:', updateError);
+  }
 
   return endIndex >= searchData.length;
 } 
